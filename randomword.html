@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Word Generator</title>
+</head>
+<body>
+
+<h1 id="randomWord">Loading...</h1>
+
+<script>
+    document.addEventListener('DOMContentLoaded', getRandomWord);
+
+    function getRandomWord() {
+        // You can replace 'YOUR_API_KEY' with your actual API key if needed
+        const apiKey = '53542ff1a3msh3ac0783f31b0c96p1a2286jsn82e272868850';
+        const apiUrl = `https://wordsapiv1.p.rapidapi.com/words/?random=true`;
+
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com',
+                'X-RapidAPI-Key': apiKey,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            const randomWord = data.word || 'Error fetching word';
+            document.getElementById('randomWord').textContent = randomWord;
+        })
+        .catch(error => console.error('Error fetching random word:', error));
+    }
+</script>
+
+</body>
+</html>
