@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌇 Pointy Pointy</title>
+    <title>ChatGPT Logo Bounce Animation</title>
     <style>
         body {
             margin: 0;
@@ -16,11 +16,11 @@
         }
 
         #logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: #2d9cdb; /* Placeholder color for ChatGPT logo */
+            width: 100px; /* Adjust size as needed */
+            height: 50px;  /* Adjust size as needed */
             position: absolute;
+            background: url('https://gioyethedev.github.io/uploads/dvd.png') no-repeat center;
+            background-size: contain;
         }
     </style>
 </head>
@@ -30,8 +30,8 @@
 
 <script>
     const logo = document.getElementById('logo');
-    let posX = Math.random() * (window.innerWidth - 80);
-    let posY = Math.random() * (window.innerHeight - 80);
+    let posX = Math.random() * (window.innerWidth - 100);
+    let posY = Math.random() * (window.innerHeight - 50);
     let speedX = 4;
     let speedY = 4;
 
@@ -48,13 +48,13 @@
         posX += speedX;
         posY += speedY;
 
-        if (posX <= 0 || posX >= window.innerWidth - 80) {
+        if (posX <= 0 || posX >= window.innerWidth - 100) {
             speedX = -speedX;
-            logo.style.backgroundColor = getRandomColor(); // Change color on horizontal bounce
+            logo.style.filter = `hue-rotate(${Math.random() * 360}deg)`; // Change color on horizontal bounce
         }
-        if (posY <= 0 || posY >= window.innerHeight - 80) {
+        if (posY <= 0 || posY >= window.innerHeight - 50) {
             speedY = -speedY;
-            logo.style.backgroundColor = getRandomColor(); // Change color on vertical bounce
+            logo.style.filter = `hue-rotate(${Math.random() * 360}deg)`; // Change color on vertical bounce
         }
 
         logo.style.left = posX + 'px';
