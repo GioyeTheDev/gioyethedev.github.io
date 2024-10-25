@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌇 ChatGPT Logo Bounce Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000000; /* Set background to black */
+        }
+
+        #logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #2d9cdb; /* Placeholder color for ChatGPT logo */
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+
+<div id="logo"></div>
+
+<script>
+    const logo = document.getElementById('logo');
+    let posX = Math.random() * (window.innerWidth - 80);
+    let posY = Math.random() * (window.innerHeight - 80);
+    let speedX = 4;
+    let speedY = 4;
+
+    function animate() {
+        posX += speedX;
+        posY += speedY;
+
+        if (posX <= 0 || posX >= window.innerWidth - 80) speedX = -speedX;
+        if (posY <= 0 || posY >= window.innerHeight - 80) speedY = -speedY;
+
+        logo.style.left = posX + 'px';
+        logo.style.top = posY + 'px';
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>
