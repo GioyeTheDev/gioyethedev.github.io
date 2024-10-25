@@ -16,8 +16,8 @@
         }
 
         #logo {
-            width: 100px; /* Adjust size as needed */
-            height: 50px;  /* Adjust size as needed */
+            width: 300px; /* Adjusted size */
+            height: 150px; /* Adjusted size */
             position: absolute;
             background: url('https://gioyethedev.github.io/uploads/dvd.png') no-repeat center;
             background-size: contain;
@@ -30,29 +30,20 @@
 
 <script>
     const logo = document.getElementById('logo');
-    let posX = Math.random() * (window.innerWidth - 100);
-    let posY = Math.random() * (window.innerHeight - 50);
+    let posX = Math.random() * (window.innerWidth - 300);
+    let posY = Math.random() * (window.innerHeight - 150);
     let speedX = 4;
     let speedY = 4;
-
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
 
     function animate() {
         posX += speedX;
         posY += speedY;
 
-        if (posX <= 0 || posX >= window.innerWidth - 100) {
+        if (posX <= 0 || posX >= window.innerWidth - 300) {
             speedX = -speedX;
             logo.style.filter = `hue-rotate(${Math.random() * 360}deg)`; // Change color on horizontal bounce
         }
-        if (posY <= 0 || posY >= window.innerHeight - 50) {
+        if (posY <= 0 || posY >= window.innerHeight - 150) {
             speedY = -speedY;
             logo.style.filter = `hue-rotate(${Math.random() * 360}deg)`; // Change color on vertical bounce
         }
