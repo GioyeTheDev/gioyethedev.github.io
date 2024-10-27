@@ -15,6 +15,7 @@
       display: flex; /* Center content */
       align-items: center; /* Center vertically */
       justify-content: center; /* Center horizontally */
+      flex-direction: column; /* Stack elements vertically */
     }
     
     @keyframes rainbow {
@@ -27,24 +28,42 @@
       85% { background-color: red; }
       100% { background-color: violet; }
     }
+    
+    button {
+      margin-top: 20px; /* Space between music and button */
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background-color: #444; /* Darker button */
+      color: white;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
 
+  <button id="downloadBtn">Download Notes</button>
+
   <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];  // Notes C4 to B4
-    const noteDuration = 1.5;  // Duration each note plays (in seconds)
+    const noteDuration = 0.5;  // Original duration each note plays (in seconds)
     const fadeDuration = 0.5;  // Duration for fade in/out (in seconds)
+    let recordedNotes = []; // Array to store played notes
 
     function playRandomMusic() {
       function playRandomNote() {
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
+        const note = frequencies[Math.floor(Math.random() * frequencies.length)]; // Pick a random note
         oscillator.type = 'sine';  // Simple sine wave for notes
-        oscillator.frequency.setValueAtTime(frequencies[Math.floor(Math.random() * frequencies.length)], audioContext.currentTime);
+        oscillator.frequency.setValueAtTime(note, audioContext.currentTime);
         
+        // Record the note
+        recordedNotes.push(note);
+
         // Connect gain node
         oscillator.connect(gainNode).connect(audioContext.destination);
 
@@ -65,12 +84,26 @@
       playRandomNote();
     }
 
+    // Function to download notes
+    function downloadNotes() {
+      const blob = new Blob([JSON.stringify(recordedNotes)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'recorded_notes.json'; // File name for the download
+      a.click();
+      URL.revokeObjectURL(url); // Cleanup
+    }
+
     // Start music automatically when page loads
     window.addEventListener("load", () => {
       audioContext.resume().then(() => {
         playRandomMusic();
       });
     });
+
+    // Add event listener to the download button
+    document.getElementById('downloadBtn').addEventListener('click', downloadNotes);
   </script>
 
 </body>
