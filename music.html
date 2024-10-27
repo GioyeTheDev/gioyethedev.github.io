@@ -43,7 +43,7 @@
         oscillator.type = 'sine';  // Simple sine wave for notes
         oscillator.frequency.setValueAtTime(frequencies[Math.floor(Math.random() * frequencies.length)], audioContext.currentTime);
         
-        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);  // Set volume low
+        gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);  // Increased volume to 0.5
         oscillator.connect(gainNode).connect(audioContext.destination);
 
         oscillator.start();
