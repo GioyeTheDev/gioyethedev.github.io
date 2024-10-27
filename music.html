@@ -41,7 +41,7 @@
       font-size: 20px; /* Font size for the counter */
       color: white; /* Color of the text */
     }
-    
+
     button {
       margin-top: 20px; /* Space between music and buttons */
       padding: 10px 20px;
@@ -51,9 +51,6 @@
       background-color: #444; /* Darker button */
       color: white;
       border-radius: 5px;
-      display: block; /* Block display for spacing */
-      margin-left: auto;
-      margin-right: auto;
     }
   </style>
 </head>
@@ -61,15 +58,17 @@
 
   <div id="noteCounter">Notes Played: 0</div>
   <h1>Random Music Generator</h1>
-  <button id="downloadBtn">Download Notes</button>
-  <button id="saveJsonBtn">Save Notes</button>
+  <button id="downloadBtn" style="display: none;">Download Song</button> <!-- Hidden initially -->
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/recorderjs/0.1.1/recorder.js"></script>
   <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];  // Notes C4 to B4
     const noteDuration = 0.5;  // Original duration each note plays (in seconds)
     const fadeDuration = 0.5;  // Duration for fade in/out (in seconds)
     let recordedNotes = []; // Array to store played notes
+    let recorder;
+    let recordingStarted = false;
 
     function updateNoteCounter() {
       document.getElementById('noteCounter').innerText = `Notes Played: ${recordedNotes.length}`;
@@ -108,41 +107,40 @@
       playRandomNote();
     }
 
-    // Function to download notes
-    function downloadNotes() {
-      const blob = new Blob([JSON.stringify(recordedNotes)], { type: 'application/json' });
+    // Start recording
+    function startRecording() {
+      if (!recordingStarted) {
+        recorder = new Recorder(audioContext.destination);
+        recorder.record();
+        recordingStarted = true;
+
+        setTimeout(stopRecording, 60000); // Stop recording after 1 minute
+      }
+    }
+
+    // Stop recording and download
+    function stopRecording() {
+      recorder.stop();
+      recorder.exportWAV(downloadMP3); // Export as WAV
+    }
+
+    // Download the recorded audio as MP3
+    function downloadMP3(blob) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'recorded_notes.json'; // File name for the download
+      a.download = 'generated_song.wav'; // File name for the download
       a.click();
       URL.revokeObjectURL(url); // Cleanup
     }
 
-    // Function to save recorded notes as music
-    function saveNotesAsMusic() {
-      const notesAsMusic = recordedNotes.map(note => {
-        return { frequency: note, duration: noteDuration };
-      });
-      const blob = new Blob([JSON.stringify(notesAsMusic)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'music_notes.json'; // File name for the download
-      a.click();
-      URL.revokeObjectURL(url); // Cleanup
-    }
-
-    // Start music automatically when page loads
+    // Start music and recording automatically when page loads
     window.addEventListener("load", () => {
       audioContext.resume().then(() => {
+        startRecording();
         playRandomMusic();
       });
     });
-
-    // Add event listeners to buttons
-    document.getElementById('downloadBtn').addEventListener('click', downloadNotes);
-    document.getElementById('saveJsonBtn').addEventListener('click', saveNotesAsMusic);
   </script>
 
 </body>
