@@ -37,37 +37,16 @@
       font-size: 20px; /* Font size for the counter */
       color: white; /* Color of the text */
     }
-
-    h1 {
-      margin: 20px 0; /* Space for the title */
-    }
-    
-    button {
-      margin-top: 20px; /* Space between music and buttons */
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      background-color: #444; /* Darker button */
-      color: white;
-      border-radius: 5px;
-      display: block; /* Block display for spacing */
-      margin-left: auto;
-      margin-right: auto;
-    }
   </style>
 </head>
 <body>
 
   <div id="noteCounter">Notes Played: 0</div>
-  <h1>Random Music Generator</h1>
-  <button id="saveJsonBtn">Save Notes</button>
-  <button id="redoMusicBtn">Redo Music</button>
 
   <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];  // Notes C4 to B4
-    const noteDuration = 0.5;  // Original duration each note plays (in seconds)
+    const noteDuration = 0.5;  // Duration each note plays (in seconds)
     const fadeDuration = 0.5;  // Duration for fade in/out (in seconds)
     let recordedNotes = []; // Array to store played notes
 
@@ -108,37 +87,12 @@
       playRandomNote();
     }
 
-    // Function to save recorded notes as music
-    function saveNotesAsMusic() {
-      const notesAsMusic = recordedNotes.map(note => {
-        return { frequency: note, duration: noteDuration };
-      });
-      const blob = new Blob([JSON.stringify(notesAsMusic)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'music_notes.json'; // File name for the download
-      a.click();
-      URL.revokeObjectURL(url); // Cleanup
-    }
-
-    // Function to redo music
-    function redoMusic() {
-      recordedNotes = []; // Reset recorded notes
-      updateNoteCounter(); // Reset the counter
-      playRandomMusic(); // Start playing music again
-    }
-
     // Start music automatically when page loads
     window.addEventListener("load", () => {
       audioContext.resume().then(() => {
         playRandomMusic();
       });
     });
-
-    // Add event listeners to buttons
-    document.getElementById('saveJsonBtn').addEventListener('click', saveNotesAsMusic);
-    document.getElementById('redoMusicBtn').addEventListener('click', redoMusic);
   </script>
 
 </body>
