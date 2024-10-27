@@ -81,7 +81,10 @@
         gainNode.gain.setValueAtTime(0.5, audioContext.currentTime + noteDuration - fadeDuration); // Set to max volume before fade out
         gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + noteDuration); // Fade to 0 volume
 
-        setTimeout(playRandomNote, (noteDuration + fadeDuration) * 1000);  // Play a new note after the current one finishes
+        // Schedule the next note to play immediately after the current note ends
+        oscillator.onended = () => {
+          playRandomNote();
+        };
       }
 
       playRandomNote();
