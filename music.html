@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Music Generator with Rainbow Background</title>
+  <style>
+    body { 
+      text-align: center; 
+      font-family: Arial, sans-serif; 
+      animation: rainbow 10s infinite; /* Animation for background color change */
+      color: white;
+    }
+    button { 
+      padding: 10px 20px; 
+      font-size: 16px; 
+      margin-top: 20px; 
+    }
+    
+    @keyframes rainbow {
+      0% { background-color: violet; }
+      14% { background-color: indigo; }
+      28% { background-color: blue; }
+      42% { background-color: green; }
+      57% { background-color: yellow; }
+      71% { background-color: orange; }
+      85% { background-color: red; }
+      100% { background-color: violet; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Random Music Generator</h1>
+  <button onclick="playRandomMusic()">Play Random Music</button>
+
+  <script>
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];  // Notes C4 to B4
+
+    function playRandomMusic() {
+      function playRandomNote() {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.type = 'sine';  // Simple sine wave for notes
+        oscillator.frequency.setValueAtTime(frequencies[Math.floor(Math.random() * frequencies.length)], audioContext.currentTime);
+        
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);  // Set volume low
+        oscillator.connect(gainNode).connect(audioContext.destination);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.5);  // Play each note for 0.5 seconds
+
+        setTimeout(playRandomNote, 500);  // Play a new note every 0.5 seconds
+      }
+
+      playRandomNote();
+    }
+
+    // Start music automatically when page loads
+    window.addEventListener("load", playRandomMusic);
+  </script>
+<iframe src="https://gioyethedev.github.io/bounce" title="Embedded Website" width="100%" height="50vh" style="border: none;"></iframe>
+</body>
+</html>
