@@ -29,10 +29,6 @@
       100% { background-color: violet; }
     }
 
-    h1 {
-      margin: 20px 0; /* Space for the title */
-    }
-    
     #noteCounter {
       position: absolute; /* Position at the top */
       top: 10px; /* Distance from the top */
@@ -42,6 +38,10 @@
       color: white; /* Color of the text */
     }
 
+    h1 {
+      margin: 20px 0; /* Space for the title */
+    }
+    
     button {
       margin-top: 20px; /* Space between music and buttons */
       padding: 10px 20px;
@@ -51,6 +51,9 @@
       background-color: #444; /* Darker button */
       color: white;
       border-radius: 5px;
+      display: block; /* Block display for spacing */
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
@@ -58,17 +61,15 @@
 
   <div id="noteCounter">Notes Played: 0</div>
   <h1>Random Music Generator</h1>
-  <button id="downloadBtn" style="display: none;">Download Song</button> <!-- Hidden initially -->
+  <button id="saveJsonBtn">Save Notes</button>
+  <button id="redoMusicBtn">Redo Music</button>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/recorderjs/0.1.1/recorder.js"></script>
   <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];  // Notes C4 to B4
     const noteDuration = 0.5;  // Original duration each note plays (in seconds)
     const fadeDuration = 0.5;  // Duration for fade in/out (in seconds)
     let recordedNotes = []; // Array to store played notes
-    let recorder;
-    let recordingStarted = false;
 
     function updateNoteCounter() {
       document.getElementById('noteCounter').innerText = `Notes Played: ${recordedNotes.length}`;
@@ -107,40 +108,37 @@
       playRandomNote();
     }
 
-    // Start recording
-    function startRecording() {
-      if (!recordingStarted) {
-        recorder = new Recorder(audioContext.destination);
-        recorder.record();
-        recordingStarted = true;
-
-        setTimeout(stopRecording, 60000); // Stop recording after 1 minute
-      }
-    }
-
-    // Stop recording and download
-    function stopRecording() {
-      recorder.stop();
-      recorder.exportWAV(downloadMP3); // Export as WAV
-    }
-
-    // Download the recorded audio as MP3
-    function downloadMP3(blob) {
+    // Function to save recorded notes as music
+    function saveNotesAsMusic() {
+      const notesAsMusic = recordedNotes.map(note => {
+        return { frequency: note, duration: noteDuration };
+      });
+      const blob = new Blob([JSON.stringify(notesAsMusic)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'generated_song.wav'; // File name for the download
+      a.download = 'music_notes.json'; // File name for the download
       a.click();
       URL.revokeObjectURL(url); // Cleanup
     }
 
-    // Start music and recording automatically when page loads
+    // Function to redo music
+    function redoMusic() {
+      recordedNotes = []; // Reset recorded notes
+      updateNoteCounter(); // Reset the counter
+      playRandomMusic(); // Start playing music again
+    }
+
+    // Start music automatically when page loads
     window.addEventListener("load", () => {
       audioContext.resume().then(() => {
-        startRecording();
         playRandomMusic();
       });
     });
+
+    // Add event listeners to buttons
+    document.getElementById('saveJsonBtn').addEventListener('click', saveNotesAsMusic);
+    document.getElementById('redoMusicBtn').addEventListener('click', redoMusic);
   </script>
 
 </body>
