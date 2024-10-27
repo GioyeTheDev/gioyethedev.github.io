@@ -34,8 +34,8 @@
   <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];  // Notes C4 to B4
-    const noteDuration = 1.0;  // Duration each note plays (in seconds)
-    const fadeDuration = 0.3;  // Duration for fade in/out (in seconds)
+    const noteDuration = 1.5;  // Duration each note plays (in seconds)
+    const fadeDuration = 0.5;  // Duration for fade in/out (in seconds)
 
     function playRandomMusic() {
       function playRandomNote() {
@@ -56,4 +56,22 @@
         oscillator.stop(audioContext.currentTime + noteDuration);  // Play each note for the specified duration
 
         // Fade out
-        gainNode.gain.setValueAtTime(0.5, audioContext.currentTime + noteDuration - fade
+        gainNode.gain.setValueAtTime(0.5, audioContext.currentTime + noteDuration - fadeDuration); // Set to max volume before fade out
+        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + noteDuration); // Fade to 0 volume
+
+        setTimeout(playRandomNote, (noteDuration + fadeDuration) * 1000);  // Play a new note after the current one finishes
+      }
+
+      playRandomNote();
+    }
+
+    // Start music automatically when page loads
+    window.addEventListener("load", () => {
+      audioContext.resume().then(() => {
+        playRandomMusic();
+      });
+    });
+  </script>
+
+</body>
+</html>
