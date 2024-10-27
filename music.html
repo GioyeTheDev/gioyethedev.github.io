@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Music Generator with Rainbow Background</title>
+  <title>Random Music Generator</title>
   <style>
     body { 
       text-align: center; 
@@ -30,7 +30,7 @@
     }
     
     button {
-      margin-top: 20px; /* Space between music and button */
+      margin-top: 20px; /* Space between music and buttons */
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
@@ -38,12 +38,16 @@
       background-color: #444; /* Darker button */
       color: white;
       border-radius: 5px;
+      display: block; /* Block display for spacing */
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
 <body>
 
   <button id="downloadBtn">Download Notes</button>
+  <button id="saveJsonBtn">Save Notes</button>
 
   <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -95,6 +99,20 @@
       URL.revokeObjectURL(url); // Cleanup
     }
 
+    // Function to save recorded notes as music
+    function saveNotesAsMusic() {
+      const notesAsMusic = recordedNotes.map(note => {
+        return { frequency: note, duration: noteDuration };
+      });
+      const blob = new Blob([JSON.stringify(notesAsMusic)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'music_notes.json'; // File name for the download
+      a.click();
+      URL.revokeObjectURL(url); // Cleanup
+    }
+
     // Start music automatically when page loads
     window.addEventListener("load", () => {
       audioContext.resume().then(() => {
@@ -102,8 +120,9 @@
       });
     });
 
-    // Add event listener to the download button
+    // Add event listeners to buttons
     document.getElementById('downloadBtn').addEventListener('click', downloadNotes);
+    document.getElementById('saveJsonBtn').addEventListener('click', saveNotesAsMusic);
   </script>
 
 </body>
