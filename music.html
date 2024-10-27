@@ -10,11 +10,11 @@
       font-family: Arial, sans-serif; 
       animation: rainbow 10s infinite; /* Animation for background color change */
       color: white;
-    }
-    button { 
-      padding: 10px 20px; 
-      font-size: 16px; 
-      margin-top: 20px; 
+      margin: 0; /* Remove default body margin */
+      height: 100vh; /* Full height for body */
+      display: flex; /* Center content */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
     }
     
     @keyframes rainbow {
@@ -30,9 +30,6 @@
   </style>
 </head>
 <body>
-
-  <h1>Random Music Generator</h1>
-  <button onclick="playRandomMusic()">Play Random Music</button>
 
   <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
