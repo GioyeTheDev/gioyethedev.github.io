@@ -7,7 +7,7 @@
   <style>
     body { 
       text-align: center; 
-      font-family: Arial, sans-serif; 
+      font-family: 'Comic Sans MS', sans-serif; 
       animation: rainbow 10s infinite; /* Animation for background color change */
       color: white;
       margin: 0; /* Remove default body margin */
@@ -29,73 +29,116 @@
       100% { background-color: violet; }
     }
 
+    #title {
+      font-size: 24px; /* Font size for the title */
+      margin-bottom: 10px; /* Space below the title */
+    }
+
     #noteCounter {
-      position: absolute; /* Position at the top */
-      top: 10px; /* Distance from the top */
-      left: 50%; /* Center horizontally */
-      transform: translateX(-50%); /* Adjust for centering */
       font-size: 20px; /* Font size for the counter */
+      color: white; /* Color of the text */
+    }
+
+    input[type=range] {
+      -webkit-appearance: none; /* Remove default styling */
+      width: 80%; /* Slider width */
+      background: black; /* Background color of the slider */
+      margin: 10px 0; /* Margin above and below the slider */
+      height: 8px; /* Height of the track */
+      border-radius: 5px; /* Round edges of the track */
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Remove default styling */
+      width: 30px; /* Width of the thumb */
+      height: 30px; /* Height of the thumb */
+      background: url('https://gioyethedev.github.io/uploads/uwu.png') no-repeat center; /* Use the custom image */
+      background-size: contain; /* Scale the image to fit */
+      border: none; /* Remove border */
+    }
+
+    #playWithMe {
+      margin-top: 10px; /* Space above the text */
+      font-size: 18px; /* Font size for the text */
       color: white; /* Color of the text */
     }
   </style>
 </head>
 <body>
 
+  <div id="title">Random Music Generator</div>
   <div id="noteCounter">Notes Played: 0</div>
+  <input id="volumeSlider" type="range" min="0" max="200" value="100" step="1" oninput="updateVolume()" />
+  <label for="volumeSlider" style="color: white;">Volume: <span id="volumeLabel">100%</span></label>
+
+  <input id="boredSlider" type="range" min="0" max="100" value="20" step="1" />
+  <div id="playWithMe">Bored Slider</div>
+
+  <input id="anotherBoredSlider" type="range" min="0" max="100" value="80" step="1" />
+  <div id="playWithMe">Another Bored Slider</div>
 
   <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];  // Notes C4 to B4
-    const noteDuration = 0.5;  // Duration each note plays (in seconds)
-    const fadeDuration = 0.5;  // Duration for fade in/out (in seconds)
-    let recordedNotes = []; // Array to store played notes
+    const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88]; // Notes C4 to B4
+    let noteCounter = 0;
+    let currentVolume = 1.0;
 
-    function updateNoteCounter() {
-      document.getElementById('noteCounter').innerText = `Notes Played: ${recordedNotes.length}`;
+    function updateVolume() {
+      currentVolume = document.getElementById("volumeSlider").value / 100;
+      document.getElementById("volumeLabel").innerText = `${document.getElementById("volumeSlider").value}%`;
     }
 
-    function playRandomMusic() {
-      function playRandomNote() {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+    // Function to play a note
+    function playNote() {
+      const frequency = frequencies[Math.floor(Math.random() * frequencies.length)];
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
 
-        const note = frequencies[Math.floor(Math.random() * frequencies.length)]; // Pick a random note
-        oscillator.type = 'sine';  // Simple sine wave for notes
-        oscillator.frequency.setValueAtTime(note, audioContext.currentTime);
-        
-        // Record the note
-        recordedNotes.push(note);
-        updateNoteCounter(); // Update the counter whenever a note is played
+      oscillator.type = 'sine'; // Sine wave
+      oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+      gainNode.gain.setValueAtTime(currentVolume, audioContext.currentTime);
 
-        // Connect gain node
-        oscillator.connect(gainNode).connect(audioContext.destination);
+      // Fade in and out
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(currentVolume, audioContext.currentTime + 0.1);
+      gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.9);
 
-        // Fade in
-        gainNode.gain.setValueAtTime(0, audioContext.currentTime);  // Start at 0 volume
-        gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + fadeDuration); // Fade to 0.5 volume
-        
-        oscillator.start();
-        oscillator.stop(audioContext.currentTime + noteDuration);  // Play each note for the specified duration
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
 
-        // Fade out
-        gainNode.gain.setValueAtTime(0.5, audioContext.currentTime + noteDuration - fadeDuration); // Set to max volume before fade out
-        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + noteDuration); // Fade to 0 volume
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 1);
 
-        // Schedule the next note to play immediately after the current note ends
-        oscillator.onended = () => {
-          playRandomNote();
-        };
-      }
-
-      playRandomNote();
+      noteCounter++;
+      document.getElementById("noteCounter").innerText = `Notes Played: ${noteCounter}`;
     }
 
-    // Start music automatically when page loads
-    window.addEventListener("load", () => {
-      audioContext.resume().then(() => {
-        playRandomMusic();
-      });
-    });
+    function randomBoredMovement() {
+      const slider = document.getElementById("boredSlider");
+      const randomMovement = Math.floor(Math.random() * 13) - 6; // Random change between -6 and +6
+
+      let newValue = parseInt(slider.value) + randomMovement; // No decimals
+      newValue = Math.max(0, Math.min(100, newValue)); // Clamp the value between 0 and 100
+
+      slider.value = newValue; // Set the new value as an integer
+      setTimeout(randomBoredMovement, 100); // Repeat the function every 100ms
+    }
+
+    function randomAnotherBoredMovement() {
+      const slider = document.getElementById("anotherBoredSlider");
+      const randomMovement = Math.floor(Math.random() * 13) - 6; // Random change between -6 and +6
+
+      let newValue = parseInt(slider.value) + randomMovement; // No decimals
+      newValue = Math.max(0, Math.min(100, newValue)); // Clamp the value between 0 and 100
+
+      slider.value = newValue; // Set the new value as an integer
+      setTimeout(randomAnotherBoredMovement, 100); // Repeat the function every 100ms
+    }
+
+    // Start playing notes every second
+    setInterval(playNote, 1000);
+    randomBoredMovement(); // Start random movement of the Boredness slider
+    randomAnotherBoredMovement(); // Start random movement of the Another Bored Slider
   </script>
 
 </body>
