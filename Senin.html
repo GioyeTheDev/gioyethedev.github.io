@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeninOS</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://files.catbox.moe/kr6355.jpg'); /* Default wallpaper */
+            background-size: cover; /* Cover the whole body */
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+        }
+        .icon {
+            width: 64px;
+            height: 64px;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+            text-align: center;
+            line-height: 64px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        .icon:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.1);
+        }
+        .window {
+            position: absolute;
+            width: 300px;
+            height: 250px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: none; /* Hidden by default */
+            z-index: 10;
+        }
+        .window-header {
+            background-color: #333;
+            color: white;
+            padding: 5px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .window-content {
+            padding: 0; /* Remove padding for full content usage */
+            overflow: hidden; /* Prevent overflow */
+            height: calc(100% - 30px); /* Full height excluding header */
+        }
+        textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none; /* Disable resizing */
+            padding: 5px;
+            box-sizing: border-box; /* Include padding in width/height */
+        }
+        iframe {
+            width: 100%;
+            height: 100%; /* Full height for iframe */
+            border: none; /* Remove border */
+        }
+        /* Decorations */
+        .decorative {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            filter: blur(10px);
+            pointer-events: none;
+        }
+        .decoration-1 { top: 10%; left: 10%; }
+        .decoration-2 { top: 30%; right: 15%; }
+        .decoration-3 { bottom: 20%; left: 50%; transform: translateX(-50%); }
+    </style>
+</head>
+<body>
+
+<audio id="clickSound" src="https://www.soundjay.com/button/sounds/button-1.mp3"></audio>
+<audio id="openSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+<audio id="closeSound" src="https://www.soundjay.com/button/sounds/button-9.mp3"></audio>
+
+<div id="desktop">
+    <div class="icon" onclick="openWindow('noteWindow')">📝 Notes</div>
+    <div class="icon" onclick="openWindow('drawingWindow')">🎨 Drawing</div>
+    <div class="icon" onclick="openWindow('musicWindow')">🎵 Music</div>
+    <div class="icon" onclick="openWindow('youtubeWindow')">📺 YouTube</div>
+    <div class="icon" onclick="openWindow('fidgetWindow')">🌀 Fidget</div>
+    <div class="icon" onclick="openWindow('settingsWindow')">⚙️ Settings</div>
+</div>
+
+<div id="taskbar">
+    <span>SeninOS</span>
+</div>
+
+<!-- Decorative Elements -->
+<div class="decorative decoration-1"></div>
+<div class="decorative decoration-2"></div>
+<div class="decorative decoration-3"></div>
+
+<!-- Notes Window -->
+<div class="window" id="noteWindow">
+    <div class="window-header">
+        Notes
+        <div>
+            <button onclick="closeWindow('noteWindow')">X</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <textarea placeholder="Write your notes here..."></textarea>
+    </div>
+</div>
+
+<!-- Drawing Window -->
+<div class="window" id="drawingWindow">
+    <div class="window-header">
+        Drawing
+        <div>
+            <button onclick="clearCanvas()">Clear</button>
+            <button onclick="closeWindow('drawingWindow')">X</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <iframe id="drawingFrame" src="https://jspaint.app/"></iframe>
+    </div>
+</div>
+
+<!-- Music Window -->
+<div class="window" id="musicWindow">
+    <div class="window-header">
+        Music
+        <div>
+            <button onclick="closeWindow('musicWindow')">X</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <iframe src="https://gioyethedev.github.io/music"></iframe>
+    </div>
+</div>
+
+<!-- YouTube Window -->
+<div class="window" id="youtubeWindow">
+    <div class="window-header">
+        YouTube
+        <div>
+            <button onclick="closeWindow('youtubeWindow')">X</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <iframe src="https://www.youtube.com/" allowfullscreen></iframe>
+    </div>
+</div>
+
+<!-- Fidget Window -->
+<div class="window" id="fidgetWindow">
+    <div class="window-header">
+        Fidget
+        <div>
+            <button onclick="closeWindow('fidgetWindow')">X</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <iframe src="https://ffffidget.com/"></iframe>
+    </div>
+</div>
+
+<!-- Settings Window -->
+<div class="window" id="settingsWindow">
+    <div class="window-header">
+        Settings
+        <button onclick="closeWindow('settingsWindow')">X</button>
+    </div>
+    <div class="window-content">
+        <label for="bgImage">Upload Image for Wallpaper:</label>
+        <input type="file" id="bgImage" accept="image/*" onchange="setWallpaper(event)">
+    </div>
+</div>
+
+<script>
+    function playClickSound() {
+        document.getElementById('clickSound').play();
+    }
+
+    function openWindow(windowId) {
+        playClickSound(); // Play click sound effect
+        document.getElementById(windowId).style.display = 'block';
+        document.getElementById('openSound').play();
+    }
+
+    function closeWindow(windowId) {
+        document.getElementById(windowId).style.display = 'none';
+        document.getElementById('closeSound').play();
+    }
+
+    function clearCanvas() {
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function setWallpaper(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.body.style.backgroundImage = `url(${e.target.result})`;
+            document.body.style.backgroundSize = 'cover'; // Cover the whole body
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+</body>
+</html>
