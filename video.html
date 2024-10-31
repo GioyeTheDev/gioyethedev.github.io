@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Video Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+        }
+        video {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px 0;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            filter: none; /* Default filter */
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Advanced Video Editor</h1>
+    <input type="file" id="videoUpload" accept="video/*">
+    <video id="videoPlayer" controls>
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="controls">
+        <button id="playBtn">Play</button>
+        <button id="pauseBtn">Pause</button>
+        <button id="rewindBtn">Rewind 10s</button>
+        <button id="fastForwardBtn">Fast Forward 10s</button>
+        <button id="muteBtn">Mute</button>
+        <button id="unmuteBtn">Unmute</button>
+        <button id="volumeUpBtn">Volume +</button>
+        <button id="volumeDownBtn">Volume -</button>
+        <button id="speedUpBtn">Speed Up</button>
+        <button id="slowDownBtn">Slow Down</button>
+        <button id="resetSpeedBtn">Reset Speed</button>
+        <button id="applyGrayscale">Apply Grayscale</button>
+        <button id="removeGrayscale">Remove Grayscale</button>
+        <button id="applySepia">Apply Sepia</button>
+        <button id="removeSepia">Remove Sepia</button>
+        <button id="resetFilters">Reset Filters</button>
+        <button id="invertColors">Invert Colors</button>
+        <button id="reversePlayback">Reverse Playback</button>
+        <button id="corruptVideo">Corrupt Video</button>
+        <button id="fullScreenBtn">Full Screen</button>
+    </div>
+
+    <script>
+        const videoUpload = document.getElementById('videoUpload');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const rewindBtn = document.getElementById('rewindBtn');
+        const fastForwardBtn = document.getElementById('fastForwardBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const unmuteBtn = document.getElementById('unmuteBtn');
+        const volumeUpBtn = document.getElementById('volumeUpBtn');
+        const volumeDownBtn = document.getElementById('volumeDownBtn');
+        const speedUpBtn = document.getElementById('speedUpBtn');
+        const slowDownBtn = document.getElementById('slowDownBtn');
+        const resetSpeedBtn = document.getElementById('resetSpeedBtn');
+        const applyGrayscale = document.getElementById('applyGrayscale');
+        const removeGrayscale = document.getElementById('removeGrayscale');
+        const applySepia = document.getElementById('applySepia');
+        const removeSepia = document.getElementById('removeSepia');
+        const resetFilters = document.getElementById('resetFilters');
+        const invertColors = document.getElementById('invertColors');
+        const reversePlayback = document.getElementById('reversePlayback');
+        const corruptVideo = document.getElementById('corruptVideo');
+        const fullScreenBtn = document.getElementById('fullScreenBtn');
+
+        let playbackRate = 1; // Default playback speed
+        let isReversing = false;
+        let originalSrc = '';
+
+        videoUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                videoPlayer.src = url;
+                originalSrc = url; // Store original source
+                videoPlayer.load();
+            }
+        });
+
+        playBtn.addEventListener('click', () => {
+            videoPlayer.play();
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            videoPlayer.pause();
+        });
+
+        rewindBtn.addEventListener('click', () => {
+            videoPlayer.currentTime = Math.max(0, videoPlayer.currentTime - 10);
+        });
+
+        fastForwardBtn.addEventListener('click', () => {
+            videoPlayer.currentTime = Math.min(videoPlayer.duration, videoPlayer.currentTime + 10);
+        });
+
+        muteBtn.addEventListener('click', () => {
+            videoPlayer.muted = true;
+        });
+
+        unmuteBtn.addEventListener('click', () => {
+            videoPlayer.muted = false;
+        });
+
+        volumeUpBtn.addEventListener('click', () => {
+            videoPlayer.volume = Math.min(1, videoPlayer.volume + 0.1);
+        });
+
+        volumeDownBtn.addEventListener('click', () => {
+            videoPlayer.volume = Math.max(0, videoPlayer.volume - 0.1);
+        });
+
+        speedUpBtn.addEventListener('click', () => {
+            playbackRate += 0.25;
+            videoPlayer.playbackRate = playbackRate;
+        });
+
+        slowDownBtn.addEventListener('click', () => {
+            playbackRate = Math.max(0.25, playbackRate - 0.25);
+            videoPlayer.playbackRate = playbackRate;
+        });
+
+        resetSpeedBtn.addEventListener('click', () => {
+            playbackRate = 1;
+            videoPlayer.playbackRate = playbackRate;
+        });
+
+        applyGrayscale.addEventListener('click', () => {
+            videoPlayer.style.filter = 'grayscale(100%)';
+        });
+
+        removeGrayscale.addEventListener('click', () => {
+            videoPlayer.style.filter = 'none';
+        });
+
+        applySepia.addEventListener('click', () => {
+            videoPlayer.style.filter = 'sepia(100%)';
+        });
+
+        removeSepia.addEventListener('click', () => {
+            videoPlayer.style.filter = 'none';
+        });
+
+        resetFilters.addEventListener('click', () => {
+            videoPlayer.style.filter = 'none';
+        });
+
+        invertColors.addEventListener('click', () => {
+            videoPlayer.style.filter = 'invert(100%)';
+        });
+
+        reversePlayback.addEventListener('click', () => {
+            if (isReversing) {
+                videoPlayer.playbackRate = playbackRate; // Reset to normal speed
+                isReversing = false;
+                videoPlayer.play();
+            } else {
+                isReversing = true;
+                let interval = setInterval(() => {
+                    if (videoPlayer.currentTime <= 0) {
+                        clearInterval(interval);
+                        videoPlayer.pause();
+                        isReversing = false;
+                    } else {
+                        videoPlayer.currentTime -= 0.1; // Reverse playback by 0.1 seconds
+                    }
+                }, 100); // Update every 100 ms
+            }
+        });
+
+        corruptVideo.addEventListener('click', () => {
+            let count = 0;
+            const interval = setInterval(() => {
+                if (count < 10) {
+                    videoPlayer.src = originalSrc + '?random=' + Math.random(); // Change source to simulate corruption
+                    videoPlayer.load();
+                    videoPlayer.play();
+                    count++;
+                } else {
+                    clearInterval(interval);
+                    videoPlayer.src = originalSrc; // Reset to original source
+                    videoPlayer.load();
+                    videoPlayer.play();
+                }
+            }, 200); // Toggle every 200 ms
+        });
+
+        fullScreenBtn.addEventListener('click', () => {
+            if (videoPlayer.requestFullscreen) {
+                videoPlayer.requestFullscreen();
+            } else if (videoPlayer.webkitRequestFullscreen) { // Safari
+                videoPlayer.webkitRequestFullscreen();
+            } else if (videoPlayer.msRequestFullscreen) { // IE11
+                videoPlayer.msRequestFullscreen();
+            }
+        });
+    </script>
+
+</body>
+</html>
