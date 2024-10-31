@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Like ChatGPT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        #chat-container {
+            max-width: 600px;
+            margin: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        #messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .message {
+            margin: 10px 0;
+        }
+        .user {
+            text-align: right;
+            color: blue;
+        }
+        .bot {
+            text-align: left;
+            color: green;
+        }
+        #user-input {
+            width: calc(100% - 100px);
+            padding: 10px;
+        }
+        #send-button {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h2>Chatbot</h2>
+        <div id="messages"></div>
+        <input type="text" id="user-input" placeholder="Type your message here...">
+        <button id="send-button">Send</button>
+        
+        <details>
+            <summary><strong>Vocabulary</strong></summary>
+            <ul>
+                <li>hello</li>
+                <li>hi</li>
+                <li>hey</li>
+                <li>how are you?</li>
+                <li>what is your name?</li>
+                <li>how old are you?</li>
+                <li>who created you?</li>
+                <li>tell me a joke</li>
+                <li>make me laugh</li>
+                <li>what can you do?</li>
+                <li>what is artificial intelligence?</li>
+                <li>tell me about programming</li>
+                <li>what is the capital of france?</li>
+                <li>what's the weather like?</li>
+                <li>tell me something interesting</li>
+                <li>give me a quote</li>
+                <li>inspire me</li>
+                <li>what is the fastest land animal?</li>
+                <li>what is the tallest mountain in the world?</li>
+                <li>what is the largest ocean?</li>
+                <li>tell me a fun fact</li>
+                <li>what is the longest river in the world?</li>
+                <li>can you help with math?</li>
+                <li>what is 2 + 2?</li>
+                <li>what is the square root of 16?</li>
+                <li>what is the meaning of life?</li>
+                <li>do you believe in aliens?</li>
+                <li>tell me about space</li>
+                <li>what is the smallest country in the world?</li>
+                <li>who is the president of the united states?</li>
+                <li>what is your favorite color?</li>
+                <li>bye</li>
+                <li>see you later</li>
+                <li>can i have a free ticket to the big buck bunny movie?</li>
+            </ul>
+        </details>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        function addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = content;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function getBotResponse(userMessage) {
+            const responses = {
+                "hello": "Hello! How can I assist you today?",
+                "hi": "Hi there! What can I help you with?",
+                "hey": "Hey! What’s on your mind?",
+                "how are you?": "I'm just a bunch of code, but thanks for asking! How about you?",
+                "what is your name?": "I'm a simple chatbot, you can call me ChatBot!",
+                "how old are you?": "I don't have an age like humans do, but I've been around since I was programmed!",
+                "who created you?": "I was created by developers who designed me to assist with various tasks.",
+                "tell me a joke": "Why did the scarecrow win an award? Because he was outstanding in his field!",
+                "make me laugh": "Why don't scientists trust atoms? Because they make up everything!",
+                "what can you do?": "I can chat with you, answer questions, and tell jokes. Ask me anything!",
+                "what is artificial intelligence?": "Artificial intelligence (AI) is the simulation of human intelligence in machines.",
+                "tell me about programming": "Programming is the process of creating a set of instructions for a computer to follow.",
+                "what is the capital of france?": "The capital of France is Paris.",
+                "what's the weather like?": "I can't check the weather, but you can look it up on a weather website!",
+                "tell me something interesting": "Did you know honey never spoils? Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3000 years old and still edible!",
+                "give me a quote": "Here's a quote: 'The only way to do great work is to love what you do.' - Steve Jobs",
+                "inspire me": "Believe you can and you're halfway there. - Theodore Roosevelt",
+                "what is the fastest land animal?": "The cheetah is the fastest land animal, capable of reaching speeds up to 70 mph!",
+                "what is the tallest mountain in the world?": "Mount Everest is the tallest mountain in the world, standing at 29,029 feet (8,848 meters).",
+                "what is the largest ocean?": "The Pacific Ocean is the largest ocean on Earth, covering more than 63 million square miles.",
+                "tell me a fun fact": "A group of flamingos is called a 'flamboyance.'",
+                "what is the longest river in the world?": "The Nile River is considered the longest river in the world, stretching about 4,135 miles (6,650 kilometers).",
+                "can you help with math?": "Sure! Just tell me the math problem you need help with.",
+                "what is 2 + 2?": "2 + 2 equals 4.",
+                "what is the square root of 16?": "The square root of 16 is 4.",
+                "what is the meaning of life?": "The meaning of life is a philosophical question; many believe it's to find happiness and purpose.",
+                "do you believe in aliens?": "I don't have beliefs, but many people find the idea of extraterrestrial life fascinating!",
+                "tell me about space": "Space is vast and contains billions of galaxies, stars, and planets. It's a fascinating field of study!",
+                "what is the smallest country in the world?": "The smallest country in the world is Vatican City.",
+                "who is the president of the united states?": "As of now, Joe Biden is the president of the United States.",
+                "what is your favorite color?": "I don't have personal preferences, but many people love blue!",
+                "bye": "Goodbye! Have a great day!",
+                "see you later": "See you later! Feel free to come back anytime.",
+                "can i have a free ticket to the big buck bunny movie?": "Here you go! Enjoy watching Big Buck Bunny!",
+                "default": "Unknown Question; Please check the vocabulary."
+            };
+
+            const normalizedMessage = userMessage.toLowerCase();
+            return responses[normalizedMessage] || responses["default"];
+        }
+
+        sendButton.addEventListener('click', () => {
+            const userMessage = userInput.value;
+            if (userMessage.trim()) {
+                addMessage(userMessage, 'user');
+                const botResponse = getBotResponse(userMessage);
+                addMessage(botResponse, 'bot');
+                if (userMessage.toLowerCase() === "can i have a free ticket to the big buck bunny movie?") {
+                    setTimeout(() => {
+                        window.location.href = "https://archive.org/download/BigBuckBunny_328/BigBuckBunny_512kb.mp4";
+                    }, 1500);
+                }
+                userInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
