@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gipitizza</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .post {
+            background-color: #f4f4f4;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .post p {
+            margin: 5px 0;
+        }
+        .header {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .post-id {
+            font-style: italic;
+            color: grey;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            color: #555;
+        }
+        .post-form {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to Gipitizza</h1>
+        <p>Stay safe and have fun! Remember to read the warnings at the start.</p>
+    </div>
+
+    <div class="warning">
+        <p>Warning: This site has no moderation, content may be NSFW or illegal. Use at your own risk. Also, be cautious of impersonators.</p>
+    </div>
+
+    <div class="post-form">
+        <h3>Share a post</h3>
+        <input type="text" id="username" placeholder="Enter your username" /><br><br>
+        <textarea id="post-content" placeholder="What's on your mind?" rows="4" cols="50"></textarea><br>
+        <button id="submit-post">Post</button>
+    </div>
+
+    <div class="posts-container">
+        <div id="pinned-post" class="post">
+            <h4><strong>Gioyous (Pinned)</strong></h4>
+            <p>Please read the warning on the very start of the page. Also, please don't do bad things like suing, as we can't do anything against it. Keep this platform safe and friendly!</p>
+        </div>
+        <!-- Posts will appear here -->
+    </div>
+
+    <div class="footer">
+        <p>Gipitizza | A random social media experience</p>
+    </div>
+
+    <script>
+        const apiUrl = 'https://api.jsonbin.io/v3/b/672d1fbeacd3cb34a8a493df';
+        const apiKey = '$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ.';
+
+        // Fetch existing posts
+        async function fetchPosts() {
+            const response = await fetch(apiUrl, {
+                headers: {
+                    'X-Master-Key': apiKey
+                }
+            });
+            const data = await response.json();
+            return data.record.posts || [];
+        }
+
+        // Shuffle the posts to display them in random order
+        function shufflePosts(posts) {
+            for (let i = posts.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [posts[i], posts[j]] = [posts[j], posts[i]]; // Swap elements
+            }
+            return posts;
+        }
+
+        // Display posts with random order
+        function displayPosts(posts) {
+            const postsContainer = document.querySelector('.posts-container');
+            postsContainer.innerHTML = `
+                <div id="pinned-post" class="post">
+                    <h4><strong>Gioyous (Pinned)</strong></h4>
+                    <p>Please read the warning on the very start of the page. Also, please don't do bad things like suing, as we can't do anything against it. Keep this platform safe and friendly!</p>
+                </div>
+            `;
+            posts = shufflePosts(posts);
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h4><strong>${post.username}</strong> <span class="post-id">§${post.id}§</span></h4>
+                    <p>${post.content}</p>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        // Submit a new post
+        document.getElementById('submit-post').addEventListener('click', async () => {
+            const content = document.getElementById('post-content').value;
+            const username = document.getElementById('username').value || 'Anonymous'; // Default to "Anonymous" if no username is provided
+
+            // Don't allow post if content is empty
+            if (!content.trim()) {
+                alert("Your post must contain a message. Sorry");
+                return;
+            }
+
+            const posts = await fetchPosts();
+            const newPost = {
+                id: posts.length + 1,
+                username: username,
+                content: content
+            };
+            posts.push(newPost);
+
+            // Save the updated posts
+            await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': apiKey
+                },
+                body: JSON.stringify({
+                    posts: posts
+                })
+            });
+
+            document.getElementById('post-content').value = ''; // Clear the input
+            document.getElementById('username').value = ''; // i like my cheese drippy bruh
+            displayPosts(posts); // Refresh the post display
+        });
+
+        // Initialize page with existing posts
+        window.onload = async () => {
+            const posts = await fetchPosts();
+            displayPosts(posts);
+        };
+    </script>
+</body>
+</html>
