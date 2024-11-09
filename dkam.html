@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Don't Kill All Men Uploader">
+    <meta property="og:description" content="Upload your images easily with our web tool! Add a watermark, and receive a shareable link in seconds. Perfect for quick image hosting and sharing, all while protecting your content with a watermark that helps showcase your work!">
+    <meta property="og:image" content="https://gioyethedev.github.io/uploads/uwu.png">
+    <meta property="og:url" content="https://bit.ly/DKAM-Files">
     <title>Don't Kill All Men Uploader</title>
-    
-    <meta property="og:title" content="Don't Kill All Men Uploader" />
-    <meta property="og:description" content="Don't Kill All Men Uploader is a straightforward and intuitive image file upload tool. Effortlessly share your images online without the need for complex registration or additional setup. Perfect for quick uploads with minimal hassle. Upload, share, and view your images with ease!" />
-    <meta property="og:image" content="https://gioyethedev.github.io/uploads/uwu.png" />
-    <meta property="og:url" content="https://bit.ly/DKAM-Files" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Don't Kill All Men Uploader" />
-    
     <style>
         body {
             display: flex;
@@ -39,12 +35,6 @@
             margin-bottom: 5px;
         }
 
-        h2 {
-            font-size: 18px;
-            margin-bottom: 25px;
-            color: #FFFF00;
-        }
-
         .upload-box {
             padding: 20px;
             background-color: rgba(43, 43, 43, 0.9);
@@ -60,186 +50,120 @@
             color: #FFFF00;
             font-size: 15px;
             background-color: #3a3a3a;
+            border: 1px solid #666;
             padding: 10px;
-            border: none;
-            border-radius: 5px;
             width: 100%;
-            text-align: center;
+            cursor: pointer;
         }
 
         button {
             margin-top: 15px;
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            padding: 10px;
+            background-color: #3a3a3a;
+            border: 1px solid #666;
+            color: #FFFF00;
+            font-size: 15px;
             cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s;
-            text-align: center;
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #666;
         }
 
-        .output {
+        .image-link {
             margin-top: 20px;
-            text-align: center;
-            padding: 15px;
-            background-color: rgba(43, 43, 43, 0.9);
-            border-radius: 8px;
-            width: 320px;
-        }
-
-        .output p, .output a {
-            font-size: 15px;
+            font-size: 16px;
             color: #FFFF00;
-            margin: 5px 0;
-            color: #FFFF00;
-        }
-
-        .output a {
-            color: #FFFF00;
-            text-decoration: none;
-            word-break: break-all;
-        }
-
-        .output a:hover {
-            text-decoration: underline;
-        }
-
-        .thumbnail {
-            margin-top: 15px;
-            max-width: 80%;
-            border-radius: 8px;
-            border: 1px solid #444444;
-            text-align: center;
-        }
-
-        audio {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            background-color: #333;
-            border-radius: 10px;
-        }
-
-        .uploading {
-            background-color: #ffcc00;
-            color: #000;
-            font-size: 18px;
-            padding: 12px;
-            border-radius: 5px;
-            cursor: default;
-        }
-
-        .hidden {
-            display: none;
         }
     </style>
 </head>
 <body>
+
     <h1>Don't Kill All Men Uploader</h1>
-    <h2>Upload and share your images with ease</h2>
-
     <div class="upload-box">
+        <h2>Upload Your Image Below</h2>
         <input type="file" id="fileInput" accept="image/*">
-        <button id="uploadButton" onclick="uploadFile()">Upload File</button>
+        <button id="uploadButton">Upload Image</button>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <p>Images will automatically have a watermark and be uploaded.</p>
+        <div class="image-link" id="imageLink"></div>
     </div>
-
-    <div class="output hidden" id="outputSection">
-        <p><strong>File URL:</strong> <a href="#" target="_blank" id="fileURL">None</a></p>
-        <p><strong>Thumbnail Preview:</strong></p>
-        <img id="thumbnailImage" class="thumbnail" src="" alt="Thumbnail will appear here if available">
-    </div>
-
-    <!-- Sound Effects -->
-    <audio id="uploadSound" src="https://www.soundjay.com/button/sounds/button-3.mp3"></audio>
-    <audio id="linkClickSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
-    <audio id="displaySound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
-
-    <!-- Background Music (Bensound - Dreams) -->
-    <audio id="backgroundMusic" loop autoplay>
-        <source src="https://www.bensound.com/bensound-music/bensound-dreams.mp3" type="audio/mp3">
-    </audio>
 
     <script>
-        function playSound(soundId) {
-            document.getElementById(soundId).play();
-        }
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            const file = document.getElementById('fileInput').files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.getElementById('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Set canvas size to match image
+                        canvas.width = img.width;
+                        canvas.height = img.height;
 
-        function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+                        // Draw image on the canvas
+                        ctx.drawImage(img, 0, 0);
 
-            if (!file) {
-                alert("Please select a file to upload.");
-                return;
+                        // Set watermark size to 1/8 of the image width
+                        const watermarkSize = img.width / 8; // 1/8 of image width
+                        
+                        // Add watermark text inside the image
+                        ctx.font = `${watermarkSize}px Arial`;
+                        ctx.fillStyle = 'white';
+                        ctx.textBaseline = 'top';
+                        ctx.strokeStyle = 'black';
+                        ctx.lineWidth = 1;
+                        ctx.fillText('https://bit.ly/DKAM-Files', 10, 10);
+                        ctx.strokeText('https://bit.ly/DKAM-Files', 10, 10);
+
+                        // Convert canvas to PNG image with watermark
+                        const watermarkedImage = canvas.toDataURL('image/png');
+
+                        // Create a new image object
+                        const uploadImage = new Image();
+                        uploadImage.src = watermarkedImage;
+
+                        uploadImage.onload = function() {
+                            // Now upload the PNG image to the API
+                            const formData = new FormData();
+                            const dataURI = uploadImage.src.split(',')[1]; // Get the base64 string of the PNG image
+                            const byteString = atob(dataURI); // Decode base64 to byte string
+                            const arrayBuffer = new ArrayBuffer(byteString.length);
+                            const uint8Array = new Uint8Array(arrayBuffer);
+
+                            // Populate uint8Array with the byte string
+                            for (let i = 0; i < byteString.length; i++) {
+                                uint8Array[i] = byteString.charCodeAt(i);
+                            }
+
+                            const blob = new Blob([uint8Array], { type: 'image/png' });
+                            formData.append('file', blob, 'image.png'); // Append file as a PNG blob
+
+                            fetch('https://dont.kill-all.men/api/files/create', {
+                                method: 'POST',
+                                body: formData,
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Image uploaded successfully', data);
+                                // Display the uploaded image link
+                                const imageLink = document.getElementById('imageLink');
+                                imageLink.innerHTML = `Your image has been uploaded successfully! <a href="${data.url}" target="_blank">Click here to view your image</a>`;
+                            })
+                            .catch(error => {
+                                console.error('Error uploading image:', error);
+                            });
+                        };
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please upload a valid image file');
             }
-
-            const maxSize = 500 * 1024 * 1024;
-            if (file.size > maxSize) {
-                alert("File is too large. Please select a file under 500MB.");
-                return;
-            }
-
-            playSound('uploadSound');
-            document.getElementById('uploadButton').classList.add('hidden');
-            const uploadingText = document.createElement('div');
-            uploadingText.classList.add('uploading');
-            uploadingText.innerText = "Uploading...";
-            document.querySelector('.upload-box').appendChild(uploadingText);
-
-            const formData = new FormData();
-            formData.append("file", file);
-
-            fetch("https://dont.kill-all.men/api/files/create", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                uploadingText.remove();
-                document.getElementById('uploadButton').classList.remove('hidden');
-                
-                if (data.url) {
-                    document.getElementById("outputSection").classList.remove('hidden');
-                    const fileURL = document.getElementById("fileURL");
-                    const thumbnailImage = document.getElementById("thumbnailImage");
-
-                    playSound('displaySound');
-
-                    const cleanedURL = data.url.replace(/^https?:\/\//, '');
-                    fileURL.href = data.url;
-                    fileURL.innerText = cleanedURL;
-
-                    if (data.thumb) {
-                        thumbnailImage.src = data.thumb;
-                        thumbnailImage.style.display = "block";
-                    } else {
-                        thumbnailImage.style.display = "none";
-                    }
-
-                    document.getElementById('backgroundMusic').style.display = 'block';
-                } else {
-                    alert("Error uploading file: " + (data.error || "Unknown error"));
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("An error occurred during the upload.");
-                uploadingText.remove();
-                document.getElementById('uploadButton').classList.remove('hidden');
-            });
-        }
-
-        document.getElementById("fileURL").addEventListener("click", function() {
-            playSound('linkClickSound');
         });
     </script>
 </body>
