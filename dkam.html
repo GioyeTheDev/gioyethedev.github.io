@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Don't Kill All Men - File Uploader</title>
+    <style>
+        /* Dark Theme Styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        h1, h2, p, a {
+            font-size: 18px;
+            color: black;
+            text-shadow: 0 0 10px white;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        .upload-box {
+            padding: 20px;
+            background-color: rgba(43, 43, 43, 0.9);
+            border: 1px solid #333333;
+            border-radius: 8px;
+            text-align: center;
+            width: 320px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="file"] {
+            margin-top: 15px;
+            color: #ffffff;
+            font-size: 15px;
+            background-color: #3a3a3a;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            text-align: center;
+        }
+
+        button {
+            margin-top: 15px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .output {
+            margin-top: 20px;
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(43, 43, 43, 0.9);
+            border-radius: 8px;
+            width: 320px;
+        }
+
+        .output p, .output a {
+            font-size: 15px;
+            color: #a5a5a5;
+            margin: 5px 0;
+        }
+
+        .output a {
+            color: #ffcc00;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .output a:hover {
+            text-decoration: underline;
+        }
+
+        .thumbnail {
+            margin-top: 15px;
+            max-width: 80%;
+            border-radius: 8px;
+            border: 1px solid #444444;
+            text-align: center;
+        }
+
+        audio {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: #333;
+            border-radius: 10px;
+        }
+
+        .uploading {
+            background-color: #ffcc00;
+            color: #000;
+            font-size: 18px;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: default;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        details {
+            background-color: red;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        summary {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        pre {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Don't Kill All Men - File Uploader</h1>
+    <h2>Upload and share your files with ease</h2>
+
+    <div class="upload-box">
+        <input type="file" id="fileInput">
+        <button id="uploadButton" onclick="uploadFile()">Upload File</button>
+    </div>
+
+    <div class="output hidden" id="outputSection">
+        <p><strong>File URL:</strong> <a href="#" target="_blank" id="fileURL">None</a></p>
+        <p><strong>Thumbnail Preview:</strong></p>
+        <img id="thumbnailImage" class="thumbnail" src="" alt="Thumbnail will appear here if available">
+    </div>
+
+    <!-- Sound Effects -->
+    <audio id="uploadSound" src="https://www.soundjay.com/button/sounds/button-3.mp3"></audio>
+    <audio id="linkClickSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+    <audio id="displaySound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+
+    <!-- Background Music (Bensound - Dreams) -->
+    <audio id="backgroundMusic" loop autoplay>
+        <source src="https://www.bensound.com/bensound-music/bensound-dreams.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        function playSound(soundId) {
+            document.getElementById(soundId).play();
+        }
+
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            // Check file type (image only)
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert("Only image files are allowed.");
+                return;
+            }
+
+            // Check file size (500MB = 500 * 1024 * 1024 bytes)
+            const maxSize = 500 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert("File is too large. Please select a file under 500MB.");
+                return;
+            }
+
+            // Play the upload sound and change button to "Uploading..."
+            playSound('uploadSound');
+            document.getElementById('uploadButton').classList.add('hidden');
+            const uploadingText = document.createElement('div');
+            uploadingText.classList.add('uploading');
+            uploadingText.innerText = "Uploading...";
+            document.querySelector('.upload-box').appendChild(uploadingText);
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            fetch("https://dont.kill-all.men/api/files/create", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove uploading text and restore button
+                uploadingText.remove();
+                document.getElementById('uploadButton').classList.remove('hidden');
+                
+                if (data.url) {
+                    document.getElementById("outputSection").classList.remove('hidden');
+                    const fileURL = document.getElementById("fileURL");
+                    const thumbnailImage = document.getElementById("thumbnailImage");
+
+                    // Display the results with sound
+                    playSound('displaySound');
+
+                    // Remove 'https://' from the displayed URL text
+                    const cleanedURL = data.url.replace(/^https?:\/\//, '');
+                    fileURL.href = data.url;
+                    fileURL.innerText = cleanedURL;
+
+                    if (data.thumb) {
+                        thumbnailImage.src = data.thumb;
+                        thumbnailImage.style.display = "block";
+                    } else {
+                        thumbnailImage.style.display = "none";
+                    }
+
+                    // Show audio player for background music
+                    document.getElementById('backgroundMusic').style.display = 'block';
+                } else {
+                    alert("Error uploading file: " + (data.error || "Unknown error"));
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred during the upload.");
+                uploadingText.remove();
+                document.getElementById('uploadButton').classList.remove('hidden');
+            });
+        }
+
+        // Play link click sound
+        document.getElementById("fileURL").addEventListener("click", function() {
+            playSound('linkClickSound');
+        });
+    </script>
+
+    <details>
+        <summary>API [URL]</summary>
+        <pre>https://dont.kill-all.men/api/files/create</pre>
+    </details>
+</body>
+</html>
