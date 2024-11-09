@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Don't Kill All Men Uploader">
-    <meta property="og:description" content="Upload your images easily with our web tool! Add a watermark, and receive a shareable link in seconds. Perfect for quick image hosting and sharing, all while protecting your content with a watermark that helps showcase your work!">
+    <meta property="og:description" content="Upload your images easily with our web tool! Add a watermark, and receive a shareable link in only 15 seconds. Perfect for quick image hosting and sharing! Please don't remove our watermark from images.">
     <meta property="og:image" content="https://gioyethedev.github.io/uploads/uwu.png">
     <meta property="og:url" content="https://bit.ly/DKAM-Files">
     <title>Don't Kill All Men Uploader</title>
@@ -109,8 +109,8 @@
 
                         // Calculate watermark size and position
                         const watermarkText = 'https://bit.ly/DKAM-Files';
-                        const maxWidth = img.width / 4;
-                        let fontSize = img.width / 20; // Initial font size
+                        const maxWidth = (img.width * 2) / 3; // Watermark should be about two-thirds of image width
+                        let fontSize = (img.width / 7.5) * 4; // Increase font size fourfold
                         ctx.font = `${fontSize}px Arial`;
                         ctx.textBaseline = 'top';
 
@@ -126,7 +126,7 @@
 
                         // Draw outline and fill text for readability
                         ctx.strokeStyle = 'black';
-                        ctx.lineWidth = 1;
+                        ctx.lineWidth = 2;
                         ctx.strokeText(watermarkText, xPos, yPos);
                         ctx.fillStyle = 'white';
                         ctx.fillText(watermarkText, xPos, yPos);
