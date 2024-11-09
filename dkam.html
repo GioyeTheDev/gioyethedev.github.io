@@ -107,17 +107,29 @@
                         // Draw image on the canvas
                         ctx.drawImage(img, 0, 0);
 
-                        // Set watermark size to 1/8 of the image width
-                        const watermarkSize = img.width / 8; // 1/8 of image width
-                        
-                        // Add watermark text inside the image
-                        ctx.font = `${watermarkSize}px Arial`;
-                        ctx.fillStyle = 'white';
+                        // Calculate watermark size and position
+                        const watermarkText = 'https://bit.ly/DKAM-Files';
+                        const maxWidth = img.width / 4;
+                        let fontSize = img.width / 20; // Initial font size
+                        ctx.font = `${fontSize}px Arial`;
                         ctx.textBaseline = 'top';
+
+                        // Adjust font size to ensure text fits within maxWidth
+                        while (ctx.measureText(watermarkText).width > maxWidth) {
+                            fontSize -= 1;
+                            ctx.font = `${fontSize}px Arial`;
+                        }
+
+                        // Position watermark in top-left corner with padding
+                        const xPos = 10;
+                        const yPos = 10;
+
+                        // Draw outline and fill text for readability
                         ctx.strokeStyle = 'black';
                         ctx.lineWidth = 1;
-                        ctx.fillText('https://bit.ly/DKAM-Files', 10, 10);
-                        ctx.strokeText('https://bit.ly/DKAM-Files', 10, 10);
+                        ctx.strokeText(watermarkText, xPos, yPos);
+                        ctx.fillStyle = 'white';
+                        ctx.fillText(watermarkText, xPos, yPos);
 
                         // Convert canvas to PNG image with watermark
                         const watermarkedImage = canvas.toDataURL('image/png');
