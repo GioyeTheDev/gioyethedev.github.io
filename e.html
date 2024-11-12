@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Standard Meta Tags -->
+    <meta name="description" content="Gioyous' futuristic alternative website with sleek, modern design and dark mode.">
+    <meta name="keywords" content="futuristic website, modern design, sleek UI, dark mode, alternative website">
+    <meta name="author" content="Gioyous">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Example Website">
+    <meta property="og:description" content="A sleek alternative to example.com, featuring a futuristic design, modern UI, and dark mode.">
+    <meta property="og:image" content="https://gioyethedev.github.io/uploads/uwu.png">
+    <meta property="og:url" content="https://gioyethedev.github.io/e">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Example Website">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Example Website">
+    <meta name="twitter:description" content="A sleek alternative to example.com, featuring a futuristic design, modern UI, and dark mode.">
+    <meta name="twitter:image" content="https://gioyethedev.github.io/uploads/uwu.png">
+    <meta name="twitter:url" content="https://gioyethedev.github.io/e">
+    <meta name="twitter:creator" content="@Gioyous">
+    
+    <!-- Meta Tags for Mobile Devices -->
+    <meta name="apple-mobile-web-app-title" content="Example Website">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#121212">
+    
+    <!-- Icons and Favicon -->
+    <link rel="icon" href="https://gioyethedev.github.io/uploads/uwu.png" type="image/png">
+    
+    <!-- Link to Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles for Futuristic Design -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2E2E2E, #121212);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+        
+        header {
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #00FF7F;
+            text-shadow: 0px 4px 10px rgba(0, 255, 127, 0.8);
+            letter-spacing: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        h1:hover {
+            transform: scale(1.1);
+            text-shadow: 0px 4px 20px rgba(0, 255, 127, 1);
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #B0B0B0;
+            opacity: 0.8;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        p:hover {
+            opacity: 1;
+        }
+        
+        footer {
+            margin-top: 50px;
+            font-size: 1rem;
+            color: #B0B0B0;
+            opacity: 0.6;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        footer:hover {
+            opacity: 1;
+        }
+        
+        /* Futuristic Card Style */
+        .card {
+            background-color: rgba(35, 35, 35, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0px 6px 20px rgba(0, 255, 127, 0.5);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .card h2 {
+            color: #00FF7F;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        
+        .card p {
+            color: #D3D3D3;
+            font-size: 1.1rem;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 10px 30px rgba(0, 255, 127, 0.7);
+        }
+        
+        /* Neon Glow Effect for Text */
+        .glow {
+            color: #00FF7F;
+            text-shadow: 0px 4px 15px rgba(0, 255, 127, 0.8), 0px 4px 30px rgba(0, 255, 127, 0.7);
+        }
+        
+        /* Responsive Design for Mobile Devices */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .card {
+                width: 90%;
+            }
+        }
+    </style>
+    
+    <title>Example Website</title>
+</head>
+<body>
+    <header>
+        <h1 class="glow">Example Website</h1>
+    </header>
+    
+    <main>
+        <div class="card">
+            <h2 class="glow">Why This Website?</h2>
+            <p>This is an alternative to example.com, in case you can't use example.com or just don't want to use it and be cooler by using another website for examples.</p>
+        </div>
+        
+        <div class="card">
+            <h2 class="glow">About This Website</h2>
+            <p>This website embraces a futuristic design, featuring dark mode, smooth animations, and sleek UI elements. It's the modern alternative to the usual websites, making browsing cool again.</p>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Gioyous. All rights reserved. Designed with future tech in mind.</p>
+    </footer>
+</body>
+</html>
