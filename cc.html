@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainbow Bouncing Ball</title>
+</head>
+<body>
+<script>
+    const WIDTH = 40;
+    const HEIGHT = 20;
+
+    let ballX = Math.floor(WIDTH / 2);
+    let ballY = Math.floor(HEIGHT / 2);
+    let velocityX = 1;
+    let velocityY = 1;
+
+    const colors = ['\x1b[31m', '\x1b[33m', '\x1b[32m', '\x1b[36m', '\x1b[34m', '\x1b[35m'];
+    let colorIndex = 0;
+
+    function clearScreen() {
+        console.log('\x1b[2J\x1b[0;0H');
+    }
+
+    function render() {
+        clearScreen();
+        for (let y = 0; y < HEIGHT; y++) {
+            let line = '';
+            for (let x = 0; x < WIDTH; x++) {
+                if (x === ballX && y === ballY) {
+                    line += `${colors[colorIndex]}●\x1b[0m`;
+                } else {
+                    line += ' ';
+                }
+            }
+            console.log(line);
+        }
+        colorIndex = (colorIndex + 1) % colors.length;
+    }
+
+    function update() {
+        ballX += velocityX;
+        ballY += velocityY;
+
+        if (ballX <= 0 || ballX >= WIDTH - 1) velocityX *= -1;
+        if (ballY <= 0 || ballY >= HEIGHT - 1) velocityY *= -1;
+    }
+
+    function main() {
+        render();
+        update();
+    }
+
+    setInterval(main, 100);
+</script>
+</body>
+</html>
