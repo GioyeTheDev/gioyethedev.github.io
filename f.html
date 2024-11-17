@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bad Word Checker</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #121212; /* Dark background color */
+            color: #ffffff; /* Always white text */
+            transition: background-color 0.5s ease, transform 0.5s ease;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: background-color 1s ease;
+        }
+        h1, p {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        input, button {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            margin: 10px auto;
+            display: block;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            font-size: 1.1rem;
+            background-color: transparent;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input::placeholder {
+            color: #888;
+        }
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        #explanation {
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #bbb;
+            transition: color 0.3s ease;
+        }
+        .angry {
+            background-color: #8B0000; /* Dark Red */
+            transform: scale(1.05);
+        }
+        .happy {
+            background-color: #4CAF50; /* Green */
+            transform: scale(1.05);
+        }
+        .futuristic-border {
+            border: 3px solid #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+        }
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+        }
+        .message {
+            font-size: 1.25rem;
+            margin-top: 20px;
+            animation: fadeIn 3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            input, button {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Bad Word Checker!</h1>
+        <p>Let's make sure everything you write is clean and friendly.</p>
+        <input type="text" id="userInput" class="futuristic-border" placeholder="Type here..." />
+        <button class="futuristic-border" onclick="checkInput()">Send</button>
+        <div id="result">BAD: <span id="badValue">N/A</span></div>
+        <div id="explanation"></div>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        const bannedWordsUrl = "https://files.catbox.moe/ttrcx7.txt";
+
+        async function fetchBannedWords() {
+            try {
+                const response = await fetch(bannedWordsUrl);
+                const text = await response.text();
+                return text.split(/\r?\n/).map(word => word.trim()).filter(word => word !== "");
+            } catch (error) {
+                console.error("Error fetching banned words:", error);
+                return [];
+            }
+        }
+
+        async function checkInput() {
+            const userInput = document.getElementById("userInput").value;
+            const badValueElement = document.getElementById("badValue");
+            const explanationElement = document.getElementById("explanation");
+            const messageElement = document.getElementById("message");
+            const bannedWords = await fetchBannedWords();
+            const words = userInput.split(/\s+/);
+
+            const foundBannedWords = words.filter(word => bannedWords.includes(word.toLowerCase()));
+
+            // Changing the background and the page's mood
+            if (foundBannedWords.length > 0) {
+                badValueElement.textContent = "true";
+                explanationElement.textContent = `The following banned word(s) were found: ${foundBannedWords.join(", ")}.`;
+                messageElement.textContent = "Whoa, that's not nice! Let's keep things friendly.";
+                document.body.classList.add('angry');
+                document.body.classList.remove('happy');
+            } else {
+                badValueElement.textContent = "false";
+                explanationElement.textContent = "No banned words were detected. Keep it up!";
+                messageElement.textContent = "Great job! You're keeping things friendly!";
+                document.body.classList.add('happy');
+                document.body.classList.remove('angry');
+            }
+
+            console.log(`BAD: ${badValueElement.textContent}`);
+        }
+    </script>
+</body>
+</html>
