@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Printy</title>
+  <!-- i eat little kids -->
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Windows_Logo_%281992-2001%29.svg/1920px-Windows_Logo_%281992-2001%29.svg.png" type="image/png">
+  <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Windows_Logo_%281992-2001%29.svg/1920px-Windows_Logo_%281992-2001%29.svg.png">
+  <link rel="stylesheet" href="https://unpkg.com/98.css">
+  <style>
+    body {
+      background-color: #A5C6E1;
+      font-family: "Tahoma", sans-serif !important;
+      color: black;
+      margin: 0;
+      padding: 0;
+    }
+
+    .window {
+      width: 500px;
+      margin: 50px auto;
+      background-color: #f1f1f1;
+      border: 2px solid #000;
+      border-radius: 0;
+      font-size: 16px;
+    }
+
+    .window-header {
+      background-color: #1e3c73; /* Plain color background */
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      text-align: left;
+      border-bottom: 1px solid #000;
+      display: flex;
+      align-items: center;
+      height: 20px;
+    }
+
+    .window-header .icon {
+      width: 16px;
+      height: 16px;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Windows_Logo_%281992-2001%29.svg/1920px-Windows_Logo_%281992-2001%29.svg.png');
+      background-size: cover;
+      margin-right: 10px;
+    }
+
+    .window-header .title {
+      display: inline-block;
+    }
+
+    .window-body {
+      padding: 10px;
+      background-color: #ffffff;
+      border-top: 1px solid #000;
+      border-left: 1px solid #000;
+      border-right: 1px solid #000;
+      font-size: 14px;
+    }
+
+    .window-body input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+      border: 1px solid #000;
+      background-color: #ffffff;
+    }
+
+    .window-body button {
+      padding: 5px 15px;
+      margin-top: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #c0c0c0;
+      color: black;
+      border: 1px solid #000;
+    }
+
+    .window-body button:hover {
+      background-color: #d3d3d3;
+    }
+
+    .win98-button {
+      padding: 6px 12px;
+      border: 1px solid #000;
+      background-color: #C0C0C0;
+      cursor: pointer;
+      font-size: 14px;
+      color: black;
+    }
+
+    .win98-button:hover {
+      background-color: #D3D3D3;
+    }
+
+    #instructions {
+      font-size: 14px;
+      margin-bottom: 20px;
+      background-color: #e4e4e4;
+      padding: 10px;
+      border: 1px solid #999999;
+      border-radius: 0;
+    }
+
+    .window-body .speed-slider {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <div class="window-header">
+      <div class="icon"></div>
+      <div class="title">Music Printy</div>
+    </div>
+    <div class="window-body">
+      <div id="instructions">
+        <p><strong>Instructions:</strong></p>
+        <ul>
+          <li>Enter numbers from 1 to 9 to represent notes (C, D, E, F, G, A, B, higher C, higher D).</li>
+          <li>Use 0 for silence (lasting 0.5 seconds).</li>
+          <li>Click "Play Music" to hear the melody.</li>
+          <li>Example: <code>1 3 5 3 1 0 2 4 5 6 5 3 0 4 5 6 7 8 9 0</code></li>
+        </ul>
+      </div>
+      <label for="music-input">Enter Numbers for Notes:</label>
+      <input type="text" id="music-input" placeholder="Example: 1 2 3 4 5 6 7 8 9 0">
+      
+      <label for="speed-slider">Select Speed:</label>
+      <input type="range" id="speed-slider" class="speed-slider" min="0" max="3" value="1" step="1">
+      <p>Speed: <span id="speed-value">1 second</span></p>
+      
+      <button id="play-button" class="win98-button">Play Music</button>
+    </div>
+  </div>
+
+  <script>
+    const noteFrequencies = {
+      1: 261.63,
+      2: 293.66,
+      3: 329.63,
+      4: 349.23,
+      5: 392.00,
+      6: 440.00,
+      7: 493.88,
+      8: 523.25,
+      9: 554.37,
+    };
+
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let noteDuration = 1000;
+
+    document.getElementById('speed-slider').addEventListener('input', (e) => {
+      const speed = e.target.value;
+      let displayText = '';
+      switch (speed) {
+        case '0':
+          noteDuration = 250;
+          displayText = '0.25 seconds';
+          break;
+        case '1':
+          noteDuration = 500;
+          displayText = '0.5 seconds';
+          break;
+        case '2':
+          noteDuration = 750;
+          displayText = '0.75 seconds';
+          break;
+        case '3':
+          noteDuration = 1000;
+          displayText = '1 second';
+          break;
+      }
+      document.getElementById('speed-value').textContent = displayText;
+    });
+
+    function playNote(frequency) {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.5);
+    }
+
+    function playSilence() {}
+
+    document.getElementById('play-button').addEventListener('click', () => {
+      const input = document.getElementById('music-input').value.trim();
+      const numbers = input.split(' ').map(num => parseInt(num, 10));
+
+      audioContext.close().then(() => {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      });
+
+      numbers.forEach((num, index) => {
+        if (num === 0) {
+          setTimeout(playSilence, index * noteDuration);
+        } else if (noteFrequencies[num]) {
+          setTimeout(() => playNote(noteFrequencies[num]), index * noteDuration);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
