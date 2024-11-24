@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird..?</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css">
+    <style>
+        @font-face {
+            font-family: 'DGTL';
+            src: url('https://gioyethedev.github.io/DGTL.TTF') format('truetype');
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'DGTL', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: skyblue;
+        }
+
+        canvas {
+            background: linear-gradient(to bottom, #87CEEB, #b8e4fc);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            border: none;
+        }
+
+        .ground {
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to bottom, #8B4513, #5A2D0C);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .ground:after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 5px;
+            background: #A0522D;
+            box-shadow: 0px -3px 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-dreams.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <canvas id="gameCanvas"></canvas>
+    <div class="ground"></div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = 400;
+        canvas.height = 600;
+
+        const GRAVITY = 0.25;
+        const FLAP_POWER = -6;
+        const PIPE_SPEED = 2;
+        const PIPE_WIDTH = 60;
+        const PIPE_HEIGHT = canvas.height;
+        const PIPE_GAP = 2.5 * PIPE_WIDTH;
+        const BIRD_SIZE = 30;
+
+        let birdVelocity = 0;
+        let pipes = [];
+        let frameCount = 0;
+        let gameOver = false;
+
+        // Player settings
+        const player = {
+            x: 100,
+            y: canvas.height / 2,
+            width: BIRD_SIZE,
+            height: BIRD_SIZE,
+            color: '#FFD700', // Yellow for bird
+            backColor: '#FFCC00' // Slightly darker yellow for the back
+        };
+
+        // Create pipes
+        function createPipe() {
+            const gapHeight = Math.floor(Math.random() * (canvas.height / 2));
+            pipes.push({
+                x: canvas.width,
+                top: gapHeight,
+                bottom: gapHeight + PIPE_GAP,
+                width: PIPE_WIDTH,
+                height: canvas.height,
+                color: '#228B22',
+            });
+        }
+
+        // Check collisions
+        function checkCollisions() {
+            pipes.forEach(pipe => {
+                const withinX = player.x + player.width > pipe.x && player.x < pipe.x + pipe.width;
+                const hitTop = player.y < pipe.top;
+                const hitBottom = player.y + player.height > pipe.bottom;
+
+                if (withinX && (hitTop || hitBottom)) {
+                    gameOver = true;
+                }
+            });
+
+            if (player.y > canvas.height - player.height) {
+                gameOver = true;
+            }
+        }
+
+        // Update game logic
+        function update() {
+            if (gameOver) return;
+
+            birdVelocity += GRAVITY;
+            player.y += birdVelocity;
+
+            pipes.forEach(pipe => pipe.x -= PIPE_SPEED);
+            pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
+
+            if (frameCount % 90 === 0) {
+                createPipe();
+            }
+
+            checkCollisions();
+            frameCount++;
+        }
+
+        // Render game
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw player back
+            ctx.fillStyle = player.backColor;
+            ctx.beginPath();
+            ctx.arc(
+                player.x + player.width / 2,
+                player.y + player.height / 2,
+                player.width / 2,
+                Math.PI / 2,
+                (3 * Math.PI) / 2
+            );
+            ctx.fill();
+
+            // Draw player (yellow body)
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Draw player face (BFDI-like)
+            ctx.fillStyle = 'black'; // Eyes and mouth color
+            ctx.beginPath();
+            ctx.arc(player.x + player.width / 4, player.y + player.height / 3, 4, 0, Math.PI * 2); // Left eye
+            ctx.arc(player.x + 3 * player.width / 4, player.y + player.height / 3, 4, 0, Math.PI * 2); // Right eye
+            ctx.fill();
+
+            // Draw mouth (smiling)
+            ctx.beginPath();
+            ctx.arc(player.x + player.width / 2, player.y + 2 * player.height / 3, 10, 0, Math.PI);
+            ctx.stroke();
+
+            // Draw pipes
+            pipes.forEach(pipe => {
+                ctx.fillStyle = pipe.color;
+                ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+                ctx.fillRect(pipe.x, pipe.bottom, pipe.width, canvas.height - pipe.bottom);
+            });
+
+            if (gameOver) {
+                ctx.fillStyle = 'black';
+                ctx.font = '30px Arial';
+                ctx.fillText('Game Over', canvas.width / 2 - 90, canvas.height / 2);
+            }
+        }
+
+        // Handle flap
+        function flap() {
+            if (gameOver) {
+                resetGame();
+            } else {
+                birdVelocity = FLAP_POWER;
+            }
+        }
+
+        // Reset game
+        function resetGame() {
+            player.y = canvas.height / 2;
+            birdVelocity = 0;
+            pipes = [];
+            gameOver = false;
+        }
+
+        // Event listeners
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                flap();
+            }
+        });
+
+        document.addEventListener('click', () => {
+            flap();
+        });
+
+        // Game loop
+        function init() {
+            setInterval(() => {
+                update();
+                render();
+            }, 1000 / 60);
+        }
+
+        init();
+    </script>
+</body>
+</html>
