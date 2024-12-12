@@ -6,30 +6,61 @@
   <title>NO Reconstructions 1.0 License</title>
   <style>
     body {
-      font-family: Verdana, sans-serif;
-      line-height: 1.5;
-      background-color: #1e1e1e;
-      color: #ddd;
+      font-family: "Arial", sans-serif;
+      background-color: #181818;
+      color: #ffffff;
       margin: 0;
       padding: 0;
+      text-align: center;
+      transition: background-color 0.5s ease;
     }
     header {
-      background-color: #333;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-      border-bottom: 2px solid #4CAF50;
+      background-color: #222;
+      color: white;
+      padding: 20px;
+      border-bottom: 3px solid #4CAF50;
+    }
+    h1 {
+      font-size: 40px;
+      background-image: linear-gradient(45deg, red, yellow, green, cyan, blue, violet);
+      background-clip: text;
+      color: transparent;
+      animation: rainbow 3s linear infinite;
+    }
+    @keyframes rainbow {
+      0% { background-position: 0%; }
+      50% { background-position: 100%; }
+      100% { background-position: 0%; }
     }
     .container {
-      max-width: 800px;
-      margin: 20px auto;
+      margin: 50px auto;
       background: #2a2a2a;
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid #444;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 900px;
     }
-    h1, h2 {
+    h2, h3, p {
+      font-size: 20px;
+      margin-top: 20px;
       color: #4CAF50;
+      transition: color 0.5s ease;
+    }
+    h3, p {
+      color: transparent;
+      background-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+      background-clip: text;
+      animation: rainbowText 3s linear infinite;
+    }
+    @keyframes rainbowText {
+      0% { background-position: 0%; }
+      50% { background-position: 100%; }
+      100% { background-position: 0%; }
+    }
+    ul {
+      text-align: left;
+      list-style: square;
+      margin: 10px 0;
+      padding-left: 30px;
     }
     a {
       color: #4CAF50;
@@ -38,30 +69,28 @@
     a:hover {
       text-decoration: underline;
     }
-    ul {
-      padding-left: 20px;
-    }
-    footer {
-      text-align: center;
-      padding: 10px;
-      background: #333;
-      color: #aaa;
-      border-top: 2px solid #4CAF50;
-    }
-    .redirect-btn {
+    .copy-btn {
       display: none;
       margin-top: 20px;
-      padding: 10px 20px;
+      padding: 12px 24px;
       background-color: #4CAF50;
       color: white;
-      text-decoration: none;
-      border-radius: 5px;
       font-weight: bold;
-      text-align: center;
-      display: block;
+      border-radius: 5px;
+      text-decoration: none;
     }
-    .redirect-btn:hover {
+    .copy-btn:hover {
       background-color: #45a049;
+    }
+    footer {
+      background-color: #222;
+      color: #bbb;
+      padding: 20px;
+      font-size: 14px;
+      border-top: 3px solid #4CAF50;
+    }
+    .footer-links {
+      text-align: center;
     }
   </style>
 </head>
@@ -70,83 +99,92 @@
     <h1>NO Reconstructions 1.0 License</h1>
     <p>Version 1.0, December 2024</p>
   </header>
+
   <div class="container">
     <h2>Preamble</h2>
-    <p>
-      The <strong>NO Reconstructions 1.0</strong> license aims to protect copyrighted works such as movies, TV shows, and soundtracks by preventing unauthorized recording, reproduction, or reconstruction. This license specifically prohibits the practice of assembling clips or fragments to recreate the original content, ensuring creators' rights are respected.
-    </p>
+    <p>Welcome to the <strong>NO Reconstructions 1.0</strong> License. This license ensures that the integrity of copyrighted works is preserved by restricting the use of clips for reconstructing the entire original content.</p>
 
     <h2>Terms and Conditions</h2>
     <h3>1. Definitions</h3>
     <ul>
-      <li><strong>Licensed Work:</strong> Any copyrighted material explicitly distributed under this license, including movies, animations, soundtracks, and other media.</li>
-      <li><strong>Recording:</strong> Any action involving capturing video, audio, or both from the Licensed Work using digital, analog, or other methods.</li>
-      <li><strong>Reconstruction:</strong> Any attempt to reassemble or reproduce the Licensed Work, partially or entirely, using fragments, clips, or other derivative materials.</li>
-      <li><strong>Clips:</strong> Short excerpts of the Licensed Work that may be recorded for specific, permitted purposes.</li>
+      <li><strong>Licensed Work:</strong> Any copyrighted media or content distributed under this license.</li>
+      <li><strong>Recording:</strong> Any capture of video or audio from the Licensed Work.</li>
+      <li><strong>Reconstruction:</strong> Assembling, remixing, or using clips to recreate the Licensed Work.</li>
     </ul>
 
     <h3>2. Prohibited Actions</h3>
     <ul>
-      <li>Recording, duplicating, or reconstructing the Licensed Work beyond the permissions outlined in Section 3.</li>
-      <li>Using clips or fragments to create derivative works, remixes, or significant recreations of the Licensed Work.</li>
-      <li>Sharing or distributing unauthorized recordings on any platform.</li>
+      <li>Recording, duplicating, or reconstructing the Licensed Work without explicit permission.</li>
+      <li>Using clips to create derivative works that can be easily assembled into the original work.</li>
+      <li>Sharing or distributing unauthorized recordings or reconstructed works.</li>
     </ul>
 
     <h3>3. Permitted Recordings</h3>
     <ul>
-      <li><strong>Special Segments:</strong> Limited recording is allowed for the following segments:
+      <li><strong>Special Segments:</strong> Recording may be allowed for:
         <ul>
-          <li>Opening sequences (e.g., title screens, intros).</li>
-          <li>Character performances (e.g., songs, musical numbers).</li>
+          <li>Opening sequences (e.g., title sequences, intros).</li>
+          <li>Character performances (e.g., musical numbers or iconic scenes).</li>
           <li>Ending credits or closing scenes.</li>
         </ul>
       </li>
-      <li><strong>Duration Limits:</strong> Recordings must not exceed:
-        <ul>
-          <li>5% of the total runtime, or</li>
-          <li>2 minutes, whichever is shorter.</li>
-        </ul>
-      </li>
-      <li><strong>Educational and Review Use:</strong> Recordings for non-commercial educational purposes or critique are allowed, provided they do not exceed the duration limits.</li>
+      <li><strong>Duration Limit:</strong> Permitted recordings may not exceed 5% of the total runtime or 2 minutes, whichever is shorter.</li>
+      <li><strong>Educational Use:</strong> Recordings for educational or critical review are allowed as long as they comply with the above duration limit.</li>
     </ul>
 
     <h3>4. Attribution</h3>
-    <p>All permitted recordings must visibly and clearly credit the original creator(s).</p>
+    <p>All permitted recordings must provide proper credit to the original creator(s) of the Licensed Work.</p>
 
-    <h3>5. Non-Commercial Use</h3>
-    <p>Permitted recordings may only be used for personal, non-commercial purposes. Any form of monetization, including uploading to ad-supported platforms, is strictly prohibited.</p>
+    <h3>5. No Commercial Use</h3>
+    <p>Recordings must be for personal, non-commercial use. Any commercial use is strictly prohibited.</p>
 
-    <h3>6. No Modifications</h3>
-    <p>Editing or altering permitted recordings to change their context, meaning, or intent is prohibited.</p>
+    <h3>6. No Alteration</h3>
+    <p>Editing or altering the recorded material in a way that changes its meaning or context is prohibited under this license.</p>
 
     <h3>7. Enforcement</h3>
-    <p>Violation of this license may result in the termination of rights and legal action under applicable copyright laws.</p>
+    <p>Violation of the terms of this license may result in the termination of your rights and legal action under applicable copyright law.</p>
 
     <h3>8. Contact</h3>
-    <p>
-      For inquiries or permissions beyond the scope of this license, contact us via:
+    <p>For more information or permission requests, you can contact us via:
       <a href="https://gioyous.bsky.social">Bluesky</a> | <a href="https://discord.gg/57ZAysQCt6">Discord</a>.
     </p>
 
-    <h3>9. Acceptance of Terms</h3>
-    <p>By accessing or using the Licensed Work, you agree to abide by these terms.</p>
+    <h3>9. Acceptance</h3>
+    <p>By accessing or using the Licensed Work, you accept and agree to these terms.</p>
 
-    <p>For additional details, visit the official <a href="https://gioyethedev.github.io/license/1/nor.html">license page</a>.</p>
-    <a id="redirect-btn" class="redirect-btn" href="#">I Accept, Show Me the Content</a>
+    <p>For more details, visit the <a href="https://gioyethedev.github.io/license/1/nor.html">official License Page</a>.</p>
+
+    <button id="copy-btn" class="copy-btn" onclick="copyLicense()">Copy License</button>
   </div>
+
   <footer>
-    &copy; 2024 NO Reconstructions License | <a href="https://gioyethedev.github.io/license/1/nor.html">License Terms</a>
+    <p>&copy; 2024 NO Reconstructions License</p>
+    <p class="footer-links">
+      <a href="https://gioyethedev.github.io/license/1/nor.html">License Terms</a> |
+      <a href="https://gioyous.bsky.social">Bluesky</a> |
+      <a href="https://discord.gg/57ZAysQCt6">Discord</a>
+    </p>
   </footer>
 
   <script>
-    // URL redirection logic
+    // Check for the "redirect" parameter in the URL
     const params = new URLSearchParams(window.location.search);
     const redirectBase64 = params.get("redirect");
-    if (redirectBase64) {
-      const decodedURL = atob(redirectBase64);
-      const button = document.getElementById("redirect-btn");
-      button.href = decodedURL;
-      button.style.display = "block";
+
+    if (!redirectBase64) {
+      // If no redirect URL, show the "Copy License" button
+      document.getElementById("copy-btn").style.display = "block";
+    }
+
+    function copyLicense() {
+      const licenseText = document.body.innerText; // Grab the entire license text
+      const textarea = document.createElement("textarea");
+      document.body.appendChild(textarea);
+      textarea.value = licenseText;
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      alert("License copied to clipboard!");
     }
   </script>
 </body>
