@@ -69,9 +69,14 @@
     a:hover {
       text-decoration: underline;
     }
-    .copy-btn {
-      display: none;
-      margin-top: 20px;
+    .buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      align-items: center;
+    }
+    .copy-btn, .agree-btn {
       padding: 12px 24px;
       background-color: #4CAF50;
       color: white;
@@ -79,7 +84,7 @@
       border-radius: 5px;
       text-decoration: none;
     }
-    .copy-btn:hover {
+    .copy-btn:hover, .agree-btn:hover {
       background-color: #45a049;
     }
     footer {
@@ -154,7 +159,10 @@
 
     <p>For more details, visit the <a href="https://gioyethedev.github.io/license/1/nor.html">official License Page</a>.</p>
 
-    <button id="copy-btn" class="copy-btn" onclick="copyLicense()">Copy License</button>
+    <div class="buttons">
+      <button id="copy-btn" class="copy-btn" onclick="copyLicense()">Copy License</button>
+      <button id="agree-btn" class="agree-btn" onclick="acceptLicense()">I Accept, Show Me the Content</button>
+    </div>
   </div>
 
   <footer>
@@ -171,9 +179,18 @@
     const params = new URLSearchParams(window.location.search);
     const redirectBase64 = params.get("redirect");
 
-    if (!redirectBase64) {
-      // If no redirect URL, show the "Copy License" button
-      document.getElementById("copy-btn").style.display = "block";
+    if (redirectBase64) {
+      // Show "I Accept" button and hide "Copy License" button
+      document.getElementById("copy-btn").style.display = "none";
+      document.getElementById("agree-btn").style.display = "inline-block";
+      document.getElementById("agree-btn").onclick = () => {
+        const decodedUrl = atob(redirectBase64);
+        window.location.href = decodedUrl;
+      };
+    } else {
+      // Always show "Copy License" button
+      document.getElementById("copy-btn").style.display = "inline-block";
+      document.getElementById("agree-btn").style.display = "none";
     }
 
     function copyLicense() {
@@ -185,6 +202,12 @@
       document.execCommand("copy");
       document.body.removeChild(textarea);
       alert("License copied to clipboard!");
+    }
+
+    function acceptLicense() {
+      alert("You accepted the license. Redirecting to content...
+
+If​ you're stuck here, reload the page and relick");
     }
   </script>
 </body>
