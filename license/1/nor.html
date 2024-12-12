@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NO Reconstructions 1.0 License</title>
+  <style>
+    body {
+      font-family: Verdana, sans-serif;
+      line-height: 1.5;
+      background-color: #1e1e1e;
+      color: #ddd;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+      border-bottom: 2px solid #4CAF50;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #444;
+    }
+    h1, h2 {
+      color: #4CAF50;
+    }
+    a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background: #333;
+      color: #aaa;
+      border-top: 2px solid #4CAF50;
+    }
+    .redirect-btn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+      display: block;
+    }
+    .redirect-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NO Reconstructions 1.0 License</h1>
+    <p>Version 1.0, December 2024</p>
+  </header>
+  <div class="container">
+    <h2>Preamble</h2>
+    <p>
+      The <strong>NO Reconstructions 1.0</strong> license aims to protect copyrighted works such as movies, TV shows, and soundtracks by preventing unauthorized recording, reproduction, or reconstruction. This license specifically prohibits the practice of assembling clips or fragments to recreate the original content, ensuring creators' rights are respected.
+    </p>
+
+    <h2>Terms and Conditions</h2>
+    <h3>1. Definitions</h3>
+    <ul>
+      <li><strong>Licensed Work:</strong> Any copyrighted material explicitly distributed under this license, including movies, animations, soundtracks, and other media.</li>
+      <li><strong>Recording:</strong> Any action involving capturing video, audio, or both from the Licensed Work using digital, analog, or other methods.</li>
+      <li><strong>Reconstruction:</strong> Any attempt to reassemble or reproduce the Licensed Work, partially or entirely, using fragments, clips, or other derivative materials.</li>
+      <li><strong>Clips:</strong> Short excerpts of the Licensed Work that may be recorded for specific, permitted purposes.</li>
+    </ul>
+
+    <h3>2. Prohibited Actions</h3>
+    <ul>
+      <li>Recording, duplicating, or reconstructing the Licensed Work beyond the permissions outlined in Section 3.</li>
+      <li>Using clips or fragments to create derivative works, remixes, or significant recreations of the Licensed Work.</li>
+      <li>Sharing or distributing unauthorized recordings on any platform.</li>
+    </ul>
+
+    <h3>3. Permitted Recordings</h3>
+    <ul>
+      <li><strong>Special Segments:</strong> Limited recording is allowed for the following segments:
+        <ul>
+          <li>Opening sequences (e.g., title screens, intros).</li>
+          <li>Character performances (e.g., songs, musical numbers).</li>
+          <li>Ending credits or closing scenes.</li>
+        </ul>
+      </li>
+      <li><strong>Duration Limits:</strong> Recordings must not exceed:
+        <ul>
+          <li>5% of the total runtime, or</li>
+          <li>2 minutes, whichever is shorter.</li>
+        </ul>
+      </li>
+      <li><strong>Educational and Review Use:</strong> Recordings for non-commercial educational purposes or critique are allowed, provided they do not exceed the duration limits.</li>
+    </ul>
+
+    <h3>4. Attribution</h3>
+    <p>All permitted recordings must visibly and clearly credit the original creator(s).</p>
+
+    <h3>5. Non-Commercial Use</h3>
+    <p>Permitted recordings may only be used for personal, non-commercial purposes. Any form of monetization, including uploading to ad-supported platforms, is strictly prohibited.</p>
+
+    <h3>6. No Modifications</h3>
+    <p>Editing or altering permitted recordings to change their context, meaning, or intent is prohibited.</p>
+
+    <h3>7. Enforcement</h3>
+    <p>Violation of this license may result in the termination of rights and legal action under applicable copyright laws.</p>
+
+    <h3>8. Contact</h3>
+    <p>
+      For inquiries or permissions beyond the scope of this license, contact us via:
+      <a href="https://gioyous.bsky.social">Bluesky</a> | <a href="https://discord.gg/57ZAysQCt6">Discord</a>.
+    </p>
+
+    <h3>9. Acceptance of Terms</h3>
+    <p>By accessing or using the Licensed Work, you agree to abide by these terms.</p>
+
+    <p>For additional details, visit the official <a href="https://gioyethedev.github.io/license/1/nor.html">license page</a>.</p>
+    <a id="redirect-btn" class="redirect-btn" href="#">I Accept, Show Me the Content</a>
+  </div>
+  <footer>
+    &copy; 2024 NO Reconstructions License | <a href="https://gioyethedev.github.io/license/1/nor.html">License Terms</a>
+  </footer>
+
+  <script>
+    // URL redirection logic
+    const params = new URLSearchParams(window.location.search);
+    const redirectBase64 = params.get("redirect");
+    if (redirectBase64) {
+      const decodedURL = atob(redirectBase64);
+      const button = document.getElementById("redirect-btn");
+      button.href = decodedURL;
+      button.style.display = "block";
+    }
+  </script>
+</body>
+</html>
