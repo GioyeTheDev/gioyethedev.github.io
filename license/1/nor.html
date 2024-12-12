@@ -12,7 +12,6 @@
       margin: 0;
       padding: 0;
       text-align: center;
-      transition: background-color 0.5s ease;
     }
     header {
       background-color: #222;
@@ -20,7 +19,7 @@
       padding: 20px;
       border-bottom: 3px solid #4CAF50;
     }
-    h1 {
+    h1, h2, h3 {
       font-size: 40px;
       background-image: linear-gradient(45deg, red, yellow, green, cyan, blue, violet);
       background-clip: text;
@@ -39,22 +38,10 @@
       border-radius: 10px;
       max-width: 900px;
     }
-    h2, h3, p {
+    p {
       font-size: 20px;
       margin-top: 20px;
       color: #4CAF50;
-      transition: color 0.5s ease;
-    }
-    h3, p {
-      color: transparent;
-      background-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
-      background-clip: text;
-      animation: rainbowText 3s linear infinite;
-    }
-    @keyframes rainbowText {
-      0% { background-position: 0%; }
-      50% { background-position: 100%; }
-      100% { background-position: 0%; }
     }
     ul {
       text-align: left;
@@ -205,9 +192,7 @@
     }
 
     function acceptLicense() {
-      alert("You accepted the license. Redirecting to content...
-
-If​ you're stuck here, reload the page and relick");
+      alert("You accepted the license. Redirecting to content...");
     }
   </script>
 </body>
