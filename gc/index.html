@@ -13,22 +13,29 @@
             font-family: Tahoma, Geneva, sans-serif;
             background: #D7E4F2;
             color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
         }
 
         .container {
             width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background: #fff;
-            border: 1px solid #a6a6a6;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8); /* Transparent white */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px); /* Glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Soft border */
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 26px;
             margin-bottom: 10px;
             text-align: center;
+            color: #1E1E1E;
         }
 
         .tabs {
@@ -42,9 +49,14 @@
             padding: 10px 20px;
             cursor: pointer;
             border-radius: 5px 5px 0 0;
-            background: #E6E6E6;
+            background: rgba(255, 255, 255, 0.7); /* Slight transparency */
             margin-right: 5px;
-            transition: background 0.3s;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .tab:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.9); /* Highlight on hover */
         }
 
         .tab.active {
@@ -73,9 +85,16 @@
             display: block;
             width: 100%;
             margin-bottom: 10px;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+
+        .form-container input[type="file"] {
+            background: rgba(255, 255, 255, 0.5);
+            color: #333;
         }
 
         .form-container button {
@@ -83,7 +102,7 @@
             color: #fff;
             border: none;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s ease;
         }
 
         .form-container button:hover {
@@ -92,6 +111,7 @@
 
         .form-container .gender-select {
             width: 50%;
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .form-container img {
@@ -104,9 +124,10 @@
         .post {
             margin-bottom: 20px;
             padding: 15px;
-            border: 1px solid #ccc;
-            background: #F9F9F9;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .post h2 {
