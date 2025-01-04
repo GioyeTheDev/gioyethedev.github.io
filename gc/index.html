@@ -3,219 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gioychat</title>
+    <meta name="author" content="Gioyethedev">
+    <title>Gioychat - Social Media</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/7.css/dist/7.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            font-family: Tahoma, Geneva, sans-serif;
+            background: #D7E4F2;
+            color: #333;
+        }
+
+        .container {
+            width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #a6a6a6;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            background: #E6E6E6;
+            margin-right: 5px;
+            transition: background 0.3s;
+        }
+
+        .tab.active {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-bottom: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-container {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        #header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 0;
+        .form-container input,
+        .form-container select,
+        .form-container button {
+            display: block;
             width: 100%;
-            text-align: center;
-        }
-
-        #login-form, #feed {
-            margin: 20px;
-            width: 80%;
-            max-width: 600px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 8px;
             border: 1px solid #ccc;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
             border-radius: 5px;
+        }
+
+        .form-container button {
+            background: #0078D7;
+            color: #fff;
+            border: none;
             cursor: pointer;
+            transition: background 0.3s;
         }
 
-        button:hover {
-            background-color: #45a049;
+        .form-container button:hover {
+            background: #005BBB;
         }
 
-        #feed {
-            display: none;
+        .form-container .gender-select {
+            width: 50%;
+        }
+
+        .form-container img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-top: 10px;
         }
 
         .post {
-            background-color: #fff;
-            padding: 15px;
             margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border: 1px solid #ccc;
+            background: #F9F9F9;
+            border-radius: 10px;
         }
 
-        .post .title {
+        .post h2 {
             font-size: 18px;
-            font-weight: bold;
+            margin: 0;
         }
 
-        .post .content {
-            margin-top: 10px;
-            font-size: 16px;
-        }
-
-        .post .meta {
-            margin-top: 10px;
+        .post p {
             font-size: 14px;
-            color: #888;
+            line-height: 1.6;
+            margin: 10px 0 0;
         }
 
-        .post img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
+        .post-meta {
+            font-size: 12px;
+            color: #666;
         }
 
-        .post .user-info {
-            display: flex;
-            align-items: center;
+        /* Additional Styles from 7.css */
+        .form-container input,
+        .form-container button {
+            background-color: #f7f7f7;
+            border: 1px solid #ccc;
+            border-radius: 8px;
         }
 
+        .post {
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #fafafa;
+        }
+
+        .tabs .tab {
+            padding: 15px;
+            background: #e0e0e0;
+            color: #333;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .tabs .tab.active {
+            background: #fff;
+            border-bottom: 3px solid #0078D7;
+        }
+
+        /* For smoother hover effects */
+        .tab:hover {
+            background: #d5d5d5;
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Welcome to Gioychat</h1>
+        <div class="tabs">
+            <div class="tab active" data-tab="login-register">Login/Register</div>
+            <div class="tab" data-tab="feed">Feed</div>
+        </div>
 
-<div id="header">
-    <h1>Welcome to Gioychat</h1>
-</div>
+        <div class="tab-content active" id="login-register">
+            <div class="form-container">
+                <form id="auth-form">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <select id="gender" class="gender-select" style="display: none;">
+                        <option value="" disabled selected>Choose Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Skibidi">Skibidi</option>
+                    </select>
+                    <input type="file" id="pfp" accept="image/png" style="display: none;">
+                    <div id="pfp-preview"></div>
+                    <button type="submit">Login</button>
+                </form>
+                <button id="toggle-form">Switch to Register</button>
+            </div>
+        </div>
 
-<div id="login-form">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-</div>
+        <div class="tab-content" id="feed">
+            <div id="posts"></div>
+        </div>
+    </div>
 
-<div id="feed">
-    <h2>Feed</h2>
-    <div id="posts"></div>
-</div>
-
-<script>
-    const apiData = {
-        "social_media": {
-            "name": "Gioychat",
-            "core": {
-                "species": [
-                    {
-                        "id": 1,
-                        "username": "Admin",
-                        "name": "Administrator",
-                        "password": "A9x!wTq%F$3J&k^bL#2p@Ue7M*vZo4R",
-                        "pfp": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAWElEQVQoFWNkYGD4D8RkASaydEE1scA0k2I9I7pmEB8mCDMQG41sCV5nIyvEZhBezdg0IIsNUs2EApB2zqYotAk5G57CQFFAyCbkaAKxQYaTqgduBkUBBgBA+Acgmg7ArAAAAABJRU5ErkJggg==",
-                        "posts": [
-                            {
-                                "planet_id": 1,
-                                "title": "Welcome Message",
-                                "content": "Hello, New World! Welcome to Gioychat, the successor of Gipitizza. Here are the rules to ensure a pleasant experience for everyone...",
-                                "publish_date": "9999-12-31T23:59:59Z",
-                                "likes": -0.2763,
-                                "dislikes": 0
-                            }
-                        ]
-                    },
-                    {
-                        "id": 2,
-                        "username": "GioychatTest",
-                        "name": "Test User",
-                        "password": "CopyMyPasta\t™",
-                        "pfp": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAZklEQVQYGYWPUQ7AIAhDYfe/81aKlUY/RqIYeS2QEfHi/MbjBBW4lL02IKpZUE72XgTpALlDEgmGHs/DSVAVFQTLcRclErEyW1+QZjG4Z7QFJOI4BvaM9bFczoXIltEgzcpxZ5IRH0njNwF1gO5kAAAAAElFTkSuQmCC",
-                        "posts": [
-                            {
-                                "planet_id": 2,
-                                "title": "First Post",
-                                "content": "Hello, how are you?",
-                                "publish_date": "0001-01-01T00:00:00Z",
-                                "likes": 0,
-                                "dislikes": 0
-                            }
-                        ]
-                    }
-                ]
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const toggleFormButton = document.getElementById('toggle-form');
+        const authForm = document.getElementById('auth-form');
+        const pfpInput = document.getElementById('pfp');
+        const pfpPreview = document.getElementById('pfp-preview');
+        const genderSelect = document.getElementById('gender');
+        const feedTab = document.querySelector('[data-tab="feed"]');
+        
+        let isRegistering = false;
+        
+        toggleFormButton.addEventListener('click', () => {
+            isRegistering = !isRegistering;
+            toggleFormButton.textContent = isRegistering ? 'Switch to Login' : 'Switch to Register';
+            if (isRegistering) {
+                document.getElementById('username').placeholder = 'Choose a Username';
+                document.getElementById('password').placeholder = 'Choose a Password';
+                genderSelect.style.display = 'block';
+                pfpInput.style.display = 'block';
+                authForm.querySelector('button').textContent = 'Register';
+            } else {
+                document.getElementById('username').placeholder = 'Username';
+                document.getElementById('password').placeholder = 'Password';
+                genderSelect.style.display = 'none';
+                pfpInput.style.display = 'none';
+                authForm.querySelector('button').textContent = 'Login';
             }
-        }
-    };
-
-    function login() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-
-        let user = apiData.social_media.core.species.find(u => u.username === username);
-
-        if (user && user.password === password) {
-            loadFeed(user);
-        } else {
-            alert("Invalid username or password.");
-        }
-    }
-
-    function loadFeed(user) {
-        document.getElementById("login-form").style.display = 'none';
-        document.getElementById("feed").style.display = 'block';
-
-        const postsContainer = document.getElementById("posts");
-        postsContainer.innerHTML = ''; // Clear previous posts if any
-
-        user.posts.forEach(post => {
-            const postElement = document.createElement("div");
-            postElement.classList.add("post");
-
-            const userInfo = document.createElement("div");
-            userInfo.classList.add("user-info");
-
-            const userPfp = document.createElement("img");
-            userPfp.src = user.pfp;
-            userInfo.appendChild(userPfp);
-
-            const usernameElem = document.createElement("span");
-            usernameElem.textContent = user.name;
-            userInfo.appendChild(usernameElem);
-
-            postElement.appendChild(userInfo);
-
-            const titleElem = document.createElement("div");
-            titleElem.classList.add("title");
-            titleElem.textContent = post.title;
-            postElement.appendChild(titleElem);
-
-            const contentElem = document.createElement("div");
-            contentElem.classList.add("content");
-            contentElem.textContent = post.content;
-            postElement.appendChild(contentElem);
-
-            const metaElem = document.createElement("div");
-            metaElem.classList.add("meta");
-            metaElem.textContent = `Published: ${new Date(post.publish_date).toLocaleString()} | Likes: ${post.likes} | Dislikes: ${post.dislikes}`;
-            postElement.appendChild(metaElem);
-
-            postsContainer.appendChild(postElement);
         });
-    }
-</script>
 
+        pfpInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type === 'image/png' && file.size < 2000000) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        if (img.width === img.height) {
+                            pfpPreview.innerHTML = `<img src="${event.target.result}" alt="Profile Picture">`;
+                        } else {
+                            alert('Profile picture must be 1:1 ratio.');
+                            pfpPreview.innerHTML = '';
+                        }
+                    };
+                    img.onerror = function() {
+                        alert('Invalid image format or codec.');
+                        pfpPreview.innerHTML = '';
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Invalid image. Please upload a PNG file with a 1:1 ratio.');
+            }
+        });
+
+        const BIN_ID = "67796a1de41b4d34e46fdd60";
+        const X_MASTER_KEY = "$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ.";
+
+        fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            headers: {
+                "X-Master-Key": X_MASTER_KEY
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const posts = data.social_media.core.species.flatMap(species => 
+                species.posts.map(post => ({
+                    username: species.username,
+                    ...post
+                }))
+            );
+            
+            const postsContainer = document.getElementById('posts');
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <p>${post.content}</p>
+                    <div class="post-meta">Posted by <strong>${post.username}</strong> on ${new Date(post.publish_date).toLocaleString()}</div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        })
+        .catch(error => console.error('Error fetching posts:', error));
+    </script>
 </body>
 </html>
