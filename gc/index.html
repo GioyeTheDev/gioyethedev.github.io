@@ -3,127 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Gioyethedev">
-    <meta name="description" content="Gioychat - A social media platform to connect with others. Join the conversation now!">
-    <meta name="keywords" content="social media, chat, online, Gioychat">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Gioychat - Social Media">
-    <meta property="og:description" content="Join Gioychat to connect with others and have fun. Register and chat now!">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Gioychat - A platform to share posts and chat securely. Stay safe, share your thoughts!">
+    <meta name="author" content="Gioyous">
+    <meta name="keywords" content="chat, social media, posts, share, Gioychat, forum">
+    <meta property="og:title" content="Gioychat - Share Your Thoughts">
+    <meta property="og:description" content="Join Gioychat and share posts with a secure and fun community. Stay safe, have fun!">
     <meta property="og:image" content="https://files.catbox.moe/rcqjn1.png">
-    <meta property="og:url" content="https://gioyethedev.github.io">
-    <meta name="theme-color" content="#0078D7">
-    <link rel="icon" href="https://files.catbox.moe/rcqjn1.png">
-    <title>Gioychat - Social Media</title>
+    <meta property="og:url" content="https://gioychat.com">
+    <meta name="twitter:title" content="Gioychat - Share Your Thoughts">
+    <meta name="twitter:description" content="Join Gioychat and share posts with a secure and fun community. Stay safe, have fun!">
+    <meta name="twitter:image" content="https://files.catbox.moe/rcqjn1.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Gioychat</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/7.css/dist/7.css">
     <style>
-        /* Style definitions remain unchanged */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .post {
+            background-color: #f4f4f4;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .post p {
+            margin: 5px 0;
+        }
+        .header {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .post-id {
+            font-style: italic;
+            color: grey;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            color: #555;
+        }
+        .post-form {
+            text-align: center;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Welcome to Gioychat</h1>
-    
-    <!-- Tabs for Login and Register -->
-    <div class="tabs">
-        <div class="tab active" onclick="switchTab('login')">Login</div>
-        <div class="tab" onclick="switchTab('register')">Register</div>
+    <div class="header">
+        <h1>Welcome to Gioychat</h1>
+        <p>Stay safe and have fun! Remember to read the warnings at the start.</p>
     </div>
-    
-    <!-- Login Form -->
-    <div id="login" class="tab-content active">
-        <div class="form-container">
-            <input type="text" placeholder="Username">
-            <input type="password" placeholder="Password">
-            <button onclick="submitPost()">Login</button>
+
+    <div class="warning">
+        <p>Warning: It is hard to moderate as the only moderation way is directly editing the api, so please try not to send any illegal or NSFW post. Use at your own risk. Also, be cautious of impersonators.</p>
+    </div>
+
+    <div class="post-form">
+        <h3>Share a post</h3>
+        <input type="text" id="username" placeholder="Enter your username" /><br><br>
+        <textarea id="post-content" placeholder="What's on your mind?" rows="4" cols="50"></textarea><br>
+        <button id="submit-post">Post</button>
+    </div>
+
+    <div class="posts-container">
+        <div id="pinned-post" class="post">
+            <h4><strong>Gioyous (Pinned)</strong></h4>
+            <p>Please read the warning on the very start of the page. Keep this platform safe and friendly!</p>
         </div>
-    </div>
-    
-    <!-- Register Form -->
-    <div id="register" class="tab-content">
-        <div class="form-container">
-            <input type="text" placeholder="Username">
-            <input type="email" placeholder="Email">
-            <input type="password" placeholder="Password">
-            <button onclick="submitPost()">Register</button>
-        </div>
+        <!-- Posts will appear here -->
     </div>
 
-    <!-- Feed Section -->
-    <div id="feed">
-        <h2>Feed</h2>
-        <!-- Placeholder for Feed Content -->
-        <div id="feed-content">
-            <!-- Posts will be dynamically loaded here -->
-        </div>
+    <div class="footer">
+        <p>Gioychat | A random social media experience</p>
     </div>
-</div>
 
-<script>
-    // Function to switch between Login and Register tabs
-    function switchTab(tabName) {
-        const tabs = document.querySelectorAll('.tab');
-        const contents = document.querySelectorAll('.tab-content');
-        
-        tabs.forEach(tab => {
-            tab.classList.remove('active');
-        });
-        
-        contents.forEach(content => {
-            content.classList.remove('active');
-        });
-        
-        document.getElementById(tabName).classList.add('active');
-        document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
-    }
+    <script>
+        const apiUrl = 'https://api.jsonbin.io/v3/b/672e681bad19ca34f8c6beaf';
+        const apiKey = '$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ.';
 
-    // Simulating loading posts (Preload and Load)
-    function loadFeed() {
-        const feedContent = document.getElementById("feed-content");
+        // Fetch existing posts
+        async function fetchPosts() {
+            const response = await fetch(apiUrl, {
+                headers: {
+                    'X-Master-Key': apiKey
+                }
+            });
+            const data = await response.json();
+            return data.record.posts || [];
+        }
 
-        // Simulated API response with posts (replace with real API data in production)
-        const posts = [
-            { id: 1, content: "This is a valid post!" },
-            { id: 2, content: "This post contains a harmful character \x00" }, // Invalid content (control character)
-            { id: 3, content: "This post contains a very bad word dick" },  // Inappropriate content (word)
-            { id: 4, content: "Another valid post!" }
-        ];
+        // Shuffle the posts to display them in random order
+        function shufflePosts(posts) {
+            for (let i = posts.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [posts[i], posts[j]] = [posts[j], posts[i]]; // Swap elements
+            }
+            return posts;
+        }
 
-        posts.forEach(post => {
-            if (isValidPost(post.content)) {
+        // Display posts with random order
+        function displayPosts(posts) {
+            const postsContainer = document.querySelector('.posts-container');
+            postsContainer.innerHTML = `
+                <div id="pinned-post" class="post">
+                    <h4><strong>Gioyous (Pinned)</strong></h4>
+                    <p>Please read the warning on the very start of the page. Also, please don't do bad things like suing, as we can't do anything against it. Keep this platform safe and friendly!</p>
+                </div>
+            `;
+            posts = shufflePosts(posts);
+            posts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
-                postElement.textContent = post.content;
-                feedContent.appendChild(postElement);
+                postElement.innerHTML = `
+                    <h4><strong>${post.username}</strong> <span class="post-id">§${post.id}§</span></h4>
+                    <p>${post.content}</p>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        // Submit a new post
+        document.getElementById('submit-post').addEventListener('click', async () => {
+            const content = document.getElementById('post-content').value;
+            const username = document.getElementById('username').value || 'Anonymous'; // Default to "Anonymous" if no username is provided
+
+            // Don't allow post if content is empty
+            if (!content.trim()) {
+                alert("Your post must contain a message. Sorry");
+                return;
             }
+
+            const posts = await fetchPosts();
+            const newPost = {
+                id: posts.length + 1,
+                username: username,
+                content: content
+            };
+            posts.push(newPost);
+
+            // Save the updated posts
+            await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': apiKey
+                },
+                body: JSON.stringify({
+                    posts: posts
+                })
+            });
+
+            document.getElementById('post-content').value = ''; // Clear the input
+            document.getElementById('username').value = ''; // i like my cheese drippy bruh
+            displayPosts(posts); // Refresh the post display
         });
-    }
 
-    // Validate if the post content is valid
-    function isValidPost(content) {
-        // Check for control characters that could break JSON
-        const controlCharacters = /[\x00-\x1F\x7F]/g;
-        if (controlCharacters.test(content)) {
-            alert("This post contains invalid characters!");
-            window.location.href = "https://gioyethedev.github.io/rules";  // Redirect to an existing rules page
-            return false;
-        }
-        
-        // Inappropriate word check (simple example)
-        const inappropriateWords = ["dick", "ass", "shit", "fuck"]; // List of inappropriate words
-        const regex = new RegExp(`\\b(${inappropriateWords.join('|')})\\b`, 'i');
-        if (regex.test(content)) {
-            alert("This post breaks the rules!");
-            window.location.href = "https://gioyethedev.github.io/rules";  // Redirect to the rules page
-            return false;
-        }
-
-        return true;
-    }
-
-    // Load the feed when the page loads
-    window.onload = loadFeed;
-</script>
-
+        // Initialize page with existing posts
+        window.onload = async () => {
+            const posts = await fetchPosts();
+            displayPosts(posts);
+        };
+    </script>
 </body>
 </html>
