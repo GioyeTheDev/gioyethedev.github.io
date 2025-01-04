@@ -1,1 +1,249 @@
-nothing here 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Gioyethedev">
+    <title>Gioychat - Social Media</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/7.css/dist/7.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Tahoma, Geneva, sans-serif;
+            background: #D7E4F2;
+            color: #333;
+        }
+
+        .container {
+            width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #a6a6a6;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            background: #E6E6E6;
+            margin-right: 5px;
+            transition: background 0.3s;
+        }
+
+        .tab.active {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-bottom: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-container input,
+        .form-container select,
+        .form-container button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-container button {
+            background: #0078D7;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .form-container button:hover {
+            background: #005BBB;
+        }
+
+        .form-container .gender-select {
+            width: 50%;
+        }
+
+        .form-container img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+
+        .post {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background: #F9F9F9;
+            border-radius: 10px;
+        }
+
+        .post h2 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .post p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 10px 0 0;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Gioychat</h1>
+        <div class="tabs">
+            <div class="tab active" data-tab="login-register">Login/Register</div>
+            <div class="tab" data-tab="feed">Feed</div>
+        </div>
+
+        <div class="tab-content active" id="login-register">
+            <div class="form-container">
+                <form id="auth-form">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <select id="gender" class="gender-select" style="display: none;">
+                        <option value="" disabled selected>Choose Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Skibidi">Skibidi</option>
+                    </select>
+                    <input type="file" id="pfp" accept="image/png" style="display: none;">
+                    <div id="pfp-preview"></div>
+                    <button type="submit">Login</button>
+                </form>
+                <button id="toggle-form">Switch to Register</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="feed">
+            <div id="posts"></div>
+        </div>
+    </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const toggleFormButton = document.getElementById('toggle-form');
+        const authForm = document.getElementById('auth-form');
+        const pfpInput = document.getElementById('pfp');
+        const pfpPreview = document.getElementById('pfp-preview');
+        const genderSelect = document.getElementById('gender');
+        const feedTab = document.querySelector('[data-tab="feed"]');
+        
+        let isRegistering = false;
+        
+        toggleFormButton.addEventListener('click', () => {
+            isRegistering = !isRegistering;
+            toggleFormButton.textContent = isRegistering ? 'Switch to Login' : 'Switch to Register';
+            if (isRegistering) {
+                document.getElementById('username').placeholder = 'Choose a Username';
+                document.getElementById('password').placeholder = 'Choose a Password';
+                genderSelect.style.display = 'block';
+                pfpInput.style.display = 'block';
+                authForm.querySelector('button').textContent = 'Register';
+            } else {
+                document.getElementById('username').placeholder = 'Username';
+                document.getElementById('password').placeholder = 'Password';
+                genderSelect.style.display = 'none';
+                pfpInput.style.display = 'none';
+                authForm.querySelector('button').textContent = 'Login';
+            }
+        });
+
+        pfpInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type === 'image/png' && file.size < 2000000) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        if (img.width === img.height) {
+                            pfpPreview.innerHTML = `<img src="${event.target.result}" alt="Profile Picture">`;
+                        } else {
+                            alert('Profile picture must be 1:1 ratio.');
+                            pfpPreview.innerHTML = '';
+                        }
+                    };
+                    img.onerror = function() {
+                        alert('Invalid image format or codec.');
+                        pfpPreview.innerHTML = '';
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Invalid image. Please upload a PNG file with a 1:1 ratio.');
+            }
+        });
+
+        const BIN_ID = "67796a1de41b4d34e46fdd60";
+        const X_MASTER_KEY = "$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ.";
+
+        fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            headers: {
+                "X-Master-Key": X_MASTER_KEY
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const posts = data.social_media.core.species.flatMap(species => 
+                species.posts.map(post => ({
+                    username: species.username,
+                    ...post
+                }))
+            );
+            
+            const postsContainer = document.getElementById('posts');
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <p>${post.content}</p>
+                    <div class="post-meta">Posted by <strong>${post.username}</strong> on ${new Date(post.publish_date).toLocaleString()}</div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        })
+        .catch(error => console.error('Error fetching posts:', error));
+    </script>
+</body>
+</html>
