@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Gioyethedev">
     <title>404 - Page Not Found</title>
+    <!-- Include 7.css framework -->
+    <link rel="stylesheet" href="https://unpkg.com/7.css/dist/7.css">
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #74ebd5, #9face6);
             display: flex;
             justify-content: center;
@@ -17,51 +19,55 @@
             height: 100vh;
             overflow: hidden;
         }
-        .container {
+        .window {
+            width: 400px;
+        }
+        .title-bar {
             text-align: center;
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 400px;
+        }
+        .title-bar-text {
+            font-weight: bold;
+        }
+        .window-body {
+            padding: 20px;
+            text-align: center;
         }
         h1 {
-            font-size: 5rem;
-            color: #ffffff;
+            font-size: 3rem;
+            color: #333;
             margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         p {
             font-size: 1.2rem;
-            color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: #555;
         }
-        a {
-            display: inline-block;
+        .button {
             margin-top: 20px;
             padding: 10px 20px;
             font-size: 1rem;
             text-decoration: none;
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            color: #000;
+            background: #e1e1e1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
         }
-        a:hover {
-            background: rgba(255, 255, 255, 0.6);
-            color: #333;
+        .button:hover {
+            background: #d1d1d1;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>404</h1>
-        <p>Oops! The page you're looking for doesn't exist.</p>
-        <p>Return to the main page to continue exploring.</p>
-        <a href="https://gioyethedev.github.io/gc">Go to Main Page</a>
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-text">Error</div>
+        </div>
+        <div class="window-body">
+            <h1>404</h1>
+            <p>Oops! The page you're looking for doesn't exist.</p>
+            <p>Return to the main page to continue exploring.</p>
+            <a href="https://gioyethedev.github.io/gc" class="button">Go to Main Page</a>
+        </div>
     </div>
 </body>
 </html>
