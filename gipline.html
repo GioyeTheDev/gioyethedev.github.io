@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gipline</title>
+    <link rel="stylesheet" href="https://unpkg.com/7.css" />
+</head>
+<body>
+    <!-- Header -->
+    <div class="window" style="width: 80%; margin: 20px auto;">
+        <div class="title-bar">
+            <div class="title-bar-text">Welcome to Gipline</div>
+        </div>
+        <div class="window-body">
+            <p>Stay safe and have fun! Read the rules below to keep the platform safe for everyone.</p>
+        </div>
+    </div>
+
+    <!-- Rules -->
+    <div class="window" style="width: 80%; margin: 20px auto;">
+        <div class="title-bar">
+            <div class="title-bar-text">Rules</div>
+        </div>
+        <div class="window-body">
+            <ul>
+                <li>No illegal, harmful, or NSFW content. Violations will be removed immediately.</li>
+                <li>Respect others. Hate speech, harassment, or impersonation will not be tolerated.</li>
+                <li>Keep your posts relevant and meaningful. Avoid spamming.</li>
+                <li>Be cautious when sharing personal information.</li>
+                <li>All content is user-generated; use the platform responsibly.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Post Form -->
+    <div class="window" style="width: 80%; margin: 20px auto;">
+        <div class="title-bar">
+            <div class="title-bar-text">Share a Post</div>
+        </div>
+        <div class="window-body">
+            <form id="post-form">
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" placeholder="Enter your username" class="text-box" /><br><br>
+                <label for="post-content">Post:</label><br>
+                <textarea id="post-content" placeholder="What's on your mind?" rows="4" cols="50" class="text-box"></textarea><br><br>
+                <button id="submit-post" class="button">Post</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Posts Container -->
+    <div class="window" style="width: 80%; margin: 20px auto;">
+        <div class="title-bar">
+            <div class="title-bar-text">Posts</div>
+        </div>
+        <div class="window-body">
+            <div id="posts-list"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="window" style="width: 80%; margin: 20px auto;">
+        <div class="title-bar">
+            <div class="title-bar-text">Footer</div>
+        </div>
+        <div class="window-body">
+            <p>Gipline | A random social media experience</p>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        const apiUrl = 'https://api.jsonbin.io/v3/b/672e681bad19ca34f8c6beaf';
+        const apiKey = '$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ.';
+
+        // Fetch existing posts
+        async function fetchPosts() {
+            const response = await fetch(apiUrl, {
+                headers: {
+                    'X-Master-Key': apiKey
+                }
+            });
+            const data = await response.json();
+            return data.record.posts || [];
+        }
+
+        // Display posts
+        function displayPosts(posts) {
+            const postsContainer = document.querySelector('#posts-list');
+            postsContainer.innerHTML = '';
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('window');
+                postElement.style.marginBottom = '10px';
+                postElement.innerHTML = `
+                    <div class="title-bar">
+                        <div class="title-bar-text">${post.username}</div>
+                    </div>
+                    <div class="window-body">
+                        <p>${post.content}</p>
+                    </div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        // Submit a new post
+        document.getElementById('submit-post').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('post-content').value.trim();
+            const username = document.getElementById('username').value.trim() || 'Anonymous';
+
+            if (!content) {
+                alert('Your post must contain a message.');
+                return;
+            }
+
+            const posts = await fetchPosts();
+            const newPost = {
+                id: posts.length + 1,
+                username: username,
+                content: content
+            };
+            posts.push(newPost);
+
+            // Save updated posts
+            await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': apiKey
+                },
+                body: JSON.stringify({ posts })
+            });
+
+            document.getElementById('post-content').value = '';
+            document.getElementById('username').value = '';
+            displayPosts(posts);
+        });
+
+        // Initialize posts on page load
+        window.onload = async () => {
+            const posts = await fetchPosts();
+            displayPosts(posts);
+        };
+    </script>
+</body>
+</html>
