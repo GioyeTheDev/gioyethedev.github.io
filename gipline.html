@@ -4,72 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gipline</title>
-    <link rel="stylesheet" href="https://unpkg.com/7.css" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Gipline">
+    <meta property="og:description" content="We are online, Gipline! A platform for sharing thoughts and posts.">
+    <meta property="og:image" content="https://files.catbox.moe/mi2qd8.png">
+    <meta property="og:url" content="https://gioyethedev.github.io/gipline">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Other meta tags for SEO -->
+    <meta name="description" content="We are online, Gipline! A platform for sharing thoughts and posts.">
+    <meta name="author" content="Gioyethedev">
+    <meta name="keywords" content="Gipline, social media, online platform, share posts, thoughts">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://files.catbox.moe/mi2qd8.png" type="image/png">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1f1f1f;
+            color: #d0d0d0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+
+        .header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .slogan {
+            font-size: 1.2em;
+            color: #bbb;
+        }
+
+        .warning {
+            color: yellow;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .post-form {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        input, textarea, button {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .posts-container {
+            margin: 20px;
+        }
+
+        .post {
+            background-color: #333;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .post h4 {
+            color: #fff;
+        }
+
+        .post-id {
+            font-style: italic;
+            color: grey;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="window" style="width: 80%; margin: 20px auto;">
-        <div class="title-bar">
-            <div class="title-bar-text">Welcome to Gipline</div>
-        </div>
-        <div class="window-body">
-            <p>Stay safe and have fun! Read the rules below to keep the platform safe for everyone.</p>
-        </div>
+    <div class="header">
+        <img src="https://files.catbox.moe/mi2qd8.png" alt="Gipline Logo">
+        <h1>Welcome to Gipline</h1>
+        <p class="slogan">We are online, Gipline!</p>
     </div>
 
-    <!-- Rules -->
-    <div class="window" style="width: 80%; margin: 20px auto;">
-        <div class="title-bar">
-            <div class="title-bar-text">Rules</div>
-        </div>
-        <div class="window-body">
-            <ul>
-                <li>No illegal, harmful, or NSFW content. Violations will be removed immediately.</li>
-                <li>Respect others. Hate speech, harassment, or impersonation will not be tolerated.</li>
-                <li>Keep your posts relevant and meaningful. Avoid spamming.</li>
-                <li>Be cautious when sharing personal information.</li>
-                <li>All content is user-generated; use the platform responsibly.</li>
-            </ul>
-        </div>
+    <div class="warning">
+        <p>Rules: Be respectful. No illegal or NSFW content. Please avoid impersonation. Enjoy your time here!</p>
     </div>
 
-    <!-- Post Form -->
-    <div class="window" style="width: 80%; margin: 20px auto;">
-        <div class="title-bar">
-            <div class="title-bar-text">Share a Post</div>
-        </div>
-        <div class="window-body">
-            <form id="post-form">
-                <label for="username">Username:</label><br>
-                <input type="text" id="username" placeholder="Enter your username" class="text-box" /><br><br>
-                <label for="post-content">Post:</label><br>
-                <textarea id="post-content" placeholder="What's on your mind?" rows="4" cols="50" class="text-box"></textarea><br><br>
-                <button id="submit-post" class="button">Post</button>
-            </form>
-        </div>
+    <div class="post-form">
+        <h3>Share a post</h3>
+        <input type="text" id="username" placeholder="Enter your username" /><br><br>
+        <textarea id="post-content" placeholder="What's on your mind?" rows="4" cols="50"></textarea><br>
+        <button id="submit-post">Post</button>
     </div>
 
-    <!-- Posts Container -->
-    <div class="window" style="width: 80%; margin: 20px auto;">
-        <div class="title-bar">
-            <div class="title-bar-text">Posts</div>
-        </div>
-        <div class="window-body">
-            <div id="posts-list"></div>
-        </div>
+    <div class="posts-container">
+        <!-- Posts will appear here -->
     </div>
 
-    <!-- Footer -->
-    <div class="window" style="width: 80%; margin: 20px auto;">
-        <div class="title-bar">
-            <div class="title-bar-text">Footer</div>
-        </div>
-        <div class="window-body">
-            <p>Gipline | A random social media experience</p>
-        </div>
+    <div class="footer">
+        <p>Thanks For Using!</p>
     </div>
 
-    <!-- Script -->
     <script>
         const apiUrl = 'https://api.jsonbin.io/v3/b/672e681bad19ca34f8c6beaf';
         const apiKey = '$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ.';
@@ -85,34 +138,39 @@
             return data.record.posts || [];
         }
 
-        // Display posts
+        // Shuffle the posts to display them in random order
+        function shufflePosts(posts) {
+            for (let i = posts.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [posts[i], posts[j]] = [posts[j], posts[i]]; // Swap elements
+            }
+            return posts;
+        }
+
+        // Display posts with random order
         function displayPosts(posts) {
-            const postsContainer = document.querySelector('#posts-list');
-            postsContainer.innerHTML = '';
+            const postsContainer = document.querySelector('.posts-container');
+            postsContainer.innerHTML = ''; // Clear previous posts
+            posts = shufflePosts(posts);
             posts.forEach(post => {
                 const postElement = document.createElement('div');
-                postElement.classList.add('window');
-                postElement.style.marginBottom = '10px';
+                postElement.classList.add('post');
                 postElement.innerHTML = `
-                    <div class="title-bar">
-                        <div class="title-bar-text">${post.username}</div>
-                    </div>
-                    <div class="window-body">
-                        <p>${post.content}</p>
-                    </div>
+                    <h4><strong>${post.username}</strong> <span class="post-id">§${post.id}§</span></h4>
+                    <p>${post.content}</p>
                 `;
                 postsContainer.appendChild(postElement);
             });
         }
 
         // Submit a new post
-        document.getElementById('submit-post').addEventListener('click', async (e) => {
-            e.preventDefault();
-            const content = document.getElementById('post-content').value.trim();
-            const username = document.getElementById('username').value.trim() || 'Anonymous';
+        document.getElementById('submit-post').addEventListener('click', async () => {
+            const content = document.getElementById('post-content').value;
+            const username = document.getElementById('username').value || 'Anonymous'; // Default to "Anonymous" if no username is provided
 
-            if (!content) {
-                alert('Your post must contain a message.');
+            // Don't allow post if content is empty
+            if (!content.trim()) {
+                alert("Your post must contain a message. Sorry");
                 return;
             }
 
@@ -124,22 +182,24 @@
             };
             posts.push(newPost);
 
-            // Save updated posts
+            // Save the updated posts
             await fetch(apiUrl, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Master-Key': apiKey
                 },
-                body: JSON.stringify({ posts })
+                body: JSON.stringify({
+                    posts: posts
+                })
             });
 
-            document.getElementById('post-content').value = '';
-            document.getElementById('username').value = '';
-            displayPosts(posts);
+            document.getElementById('post-content').value = ''; // Clear the input
+            document.getElementById('username').value = ''; // Reset the username
+            displayPosts(posts); // Refresh the post display
         });
 
-        // Initialize posts on page load
+        // Initialize page with existing posts
         window.onload = async () => {
             const posts = await fetchPosts();
             displayPosts(posts);
