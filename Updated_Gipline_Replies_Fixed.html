@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gipline</title>
+
+    <meta property="og:title" content="Gipline">
+    <meta property="og:description" content="We are online, Gipline! A platform for sharing thoughts and posts.">
+    <meta property="og:image" content="https://files.catbox.moe/mi2qd8.png">
+    <meta property="og:url" content="https://gioyethedev.github.io/gipline">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="description" content="We are online, Gipline! A platform for sharing thoughts and posts.">
+    <meta name="author" content="Gioyethedev">
+    <meta name="keywords" content="Gipline, social media, online platform, share posts, thoughts">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="https://files.catbox.moe/mi2qd8.png" type="image/png">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1f1f1f;
+            color: #d0d0d0;
+            margin: 0;
+            padding: 0;
+        }
+        .header, .footer {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+        .slogan {
+            font-size: 1.2em;
+            color: #bbb;
+        }
+        .warning {
+            color: yellow;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .post-form {
+            text-align: center;
+            margin: 20px 0;
+        }
+        input, textarea, button {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .posts-container {
+            margin: 20px;
+        }
+        .post {
+            background-color: #333;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .post h4 {
+            color: #fff;
+        }
+        .post-id {
+            font-style: italic;
+            color: grey;
+        }
+        .replies {
+            margin-left: 20px;
+            background-color: #444;
+            border-left: 2px solid #777;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://files.catbox.moe/mi2qd8.png" alt="Gipline Logo">
+        <h1>Welcome to Gipline</h1>
+        <p class="slogan">We are online, Gipline!</p>
+    </div>
+    <div class="warning">
+        <p>Rules: Be respectful. No illegal or NSFW content. Please avoid impersonation. Enjoy your time here!</p>
+    </div>
+    <div class="post-form">
+        <h3>Share a post</h3>
+        <input type="text" id="username" placeholder="Title, recommended to also include username"><br><br>
+        <textarea id="post-content" placeholder="What's on your mind?" rows="4" cols="50"></textarea><br>
+        <button id="submit-post">Post</button>
+    </div>
+    <div class="posts-container">
+        <!-- Posts will appear here -->
+    </div>
+    <div class="footer">
+        <p>Thanks For Using!</p>
+    </div>
+    <script>
+        const apiUrl = 'https://api.jsonbin.io/v3/b/672e681bad19ca34f8c6beaf';
+        const apiKey = '$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ.';
+
+        async function fetchPosts() {
+            const response = await fetch(apiUrl, { headers: { 'X-Master-Key': apiKey } });
+            const data = await response.json();
+            return data.record.posts || [];
+        }
+
+        function displayPosts(posts) {
+            const postsContainer = document.querySelector('.posts-container');
+            postsContainer.innerHTML = '';
+            posts.sort((a, b) => b.id - a.id); // Sort by recent
+
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h4><strong>${post.username}</strong> <span class="post-id">§${post.id}§</span></h4>
+                    <p>${post.content}</p>
+                    <div class="replies"></div>
+                `;
+                postsContainer.appendChild(postElement);
+
+                // Display replies under the post
+                const repliesContainer = postElement.querySelector('.replies');
+                posts.filter(reply => reply.content.startsWith(`§${post.id}§`))
+                     .forEach(reply => {
+                         const replyContent = reply.content.replace(`§${post.id}§`, '').trim();
+                         repliesContainer.innerHTML += `<p><strong>Reply:</strong> ${replyContent}</p>`;
+                     });
+            });
+        }
+
+        document.getElementById('submit-post').addEventListener('click', async () => {
+            const content = document.getElementById('post-content').value;
+            const username = document.getElementById('username').value || 'Anonymous';
+
+            if (!content.trim()) {
+                alert("Your post must contain a message.");
+                return;
+            }
+
+            const posts = await fetchPosts();
+            const newPost = { id: posts.length + 1, username: username, content: content };
+            posts.push(newPost);
+
+            await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': apiKey
+                },
+                body: JSON.stringify({ posts: posts })
+            });
+
+            document.getElementById('post-content').value = '';
+            document.getElementById('username').value = '';
+            displayPosts(posts);
+        });
+
+        window.onload = async () => {
+            const posts = await fetchPosts();
+            displayPosts(posts);
+        };
+    </script>
+</body>
+</html>
