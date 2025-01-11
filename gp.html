@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,9 +58,13 @@
             margin: 10px;
             padding: 10px;
             border-radius: 5px;
+            position: relative;
         }
         .post h4 {
             color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .post-id {
             font-style: italic;
@@ -85,6 +87,12 @@
             font-size: 1.5em;
             cursor: pointer;
         }
+        .eye-icon {
+            color: #000;
+            font-size: 1.5em;
+            cursor: pointer;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -94,7 +102,7 @@
         <p class="slogan">We are online, Gipline!</p>
     </div>
     <div class="warning">
-        <p>Gipline v1.2.1 [11 Jan 2025]</p>
+        <p>Gipline v1.2.2 [11 Jan 2025]</p>
         <p>Rules: Be respectful. No illegal or NSFW content. Please avoid impersonation. Enjoy your time here!</p>
     </div>
     <div class="post-form">
@@ -125,10 +133,13 @@
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
                 postElement.innerHTML = `
-                    <h4><strong>${post.username}</strong> <span class="post-id">§${post.id}§</span></h4>
+                    <h4><strong>${post.username}</strong> 
+                        <span class="post-id">§${post.id}§</span>
+                        <span class="reply-icon" data-id="${post.id}">🗨️</span>
+                        <span class="eye-icon" data-id="${post.id}">👀</span>
+                    </h4>
                     <p>${post.content.replace(/([^]+)(https?:\/\/[^]+)/g, '<a href="$2" target="_blank">$1</a>')}</p>
                     <p class="post-meta">${post.date ? new Date(post.date).toLocaleString() : 'This Post Was Posted Before Timestamps Were Added.'}</p>
-                    <div class="reply-icon" data-id="${post.id}">🗨️</div>
                     <div class="replies"></div>
                 `;
                 postsContainer.appendChild(postElement);
@@ -154,6 +165,11 @@
 
             if (!content.trim()) {
                 alert("Your post must contain a message.");
+                return;
+            }
+
+            if (username.length > 250) {
+                alert("The username cannot exceed 250 characters.");
                 return;
             }
 
@@ -199,13 +215,44 @@
                     }
                 }
             }
+
+            if (e.target.classList.contains('eye-icon')) {
+                const postId = e.target.getAttribute('data-id');
+                const postElement = document.querySelector(`.post-id:contains(§${postId}§)`).parentElement.parentElement;
+                const isVisible = postElement.style.display === 'none';
+
+                if (isVisible) {
+                    postElement.style.display = 'block';
+                    e.target.textContent = '👀';
+                } else {
+                    postElement.style.display = 'none';
+                    e.target.textContent = '👁️';
+                }
+            }
         });
 
         window.onload = async () => {
             const posts = await fetchPosts();
             displayPosts(posts);
         };
+
+        setInterval(async () => {
+            const posts = await fetchPosts();
+            displayPosts(posts);
+            requestNotificationPermission();
+        }, 120000);
+
+        function requestNotificationPermission() {
+            if (Notification.permission === 'default') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification('Gipline Notifications', { body: 'You will now receive notifications for new posts!' });
+                    }
+                });
+            } else if (Notification.permission === 'granted') {
+                new Notification('Gipline Notifications', { body: 'You will now receive notifications for new posts!' });
+            }
+        }
     </script>
 </body>
 </html>
-
