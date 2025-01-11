@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funny Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Funny Notification Sender</h1>
+    <p>Click the button below to receive funny notifications!</p>
+    <button id="notifyButton">Send Funny Notification</button>
+
+    <script>
+        // Request notification permission on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!("Notification" in window)) {
+                alert("This browser does not support notifications.");
+            } else if (Notification.permission === "default") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        console.log("Notification permission granted.");
+                    } else {
+                        alert("Please allow notifications to use this feature!");
+                    }
+                });
+            }
+        });
+
+        // List of funny messages
+        const funnyMessages = [
+            "Why don’t skeletons fight each other? They don’t have the guts!",
+            "I'm reading a book on anti-gravity. It's impossible to put down!",
+            "Did you hear about the mathematician who’s afraid of negative numbers? He’ll stop at nothing to avoid them!",
+            "Why don’t scientists trust atoms? Because they make up everything!",
+            "Why did the scarecrow win an award? He was outstanding in his field!",
+            "What do you call fake spaghetti? An impasta!",
+            "Why do cows have hooves instead of feet? Because they lactose!",
+        ];
+
+        // Function to send a funny notification
+        function sendFunnyNotification() {
+            if (Notification.permission === "granted") {
+                const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+                new Notification("😂 Funny Notification", {
+                    body: randomMessage,
+                    icon: "https://gioyethedev.github.io/p.png" // Placeholder image
+                });
+            } else if (Notification.permission === "denied") {
+                alert("Notifications are blocked. Please enable them in your browser settings.");
+            } else {
+                alert("Please allow notifications to receive funny messages!");
+            }
+        }
+
+        // Attach event listener to the button
+        document.getElementById("notifyButton").addEventListener("click", sendFunnyNotification);
+    </script>
+</body>
+</html>
