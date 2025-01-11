@@ -1,11 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gipline</title>
-
     <meta property="og:title" content="Gipline">
     <meta property="og:description" content="We are online, Gipline! A platform for sharing thoughts and posts.">
     <meta property="og:image" content="https://files.catbox.moe/mi2qd8.png">
@@ -17,7 +15,6 @@
     <meta name="keywords" content="Gipline, social media, online platform, share posts, thoughts">
     <meta name="robots" content="index, follow">
     <link rel="icon" href="https://files.catbox.moe/mi2qd8.png" type="image/png">
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,6 +66,10 @@
             font-style: italic;
             color: grey;
         }
+        .post-meta {
+            color: #aaa;
+            font-size: 0.9em;
+        }
         .replies {
             margin-left: 20px;
             background-color: #444;
@@ -89,12 +90,11 @@
     </div>
     <div class="post-form">
         <h3>Share a post</h3>
-        <input type="text" id="username" placeholder="Title, recommended to also include username"><br><br>
-        <textarea id="post-content" placeholder="What's on your mind?" rows="4" cols="50"></textarea><br>
+        <input type="text" id="username" placeholder="Luke: Is it said ananas or pineapple?"><br><br>
+        <textarea id="post-content" placeholder="Hi, my name is Luke. I’ve been in this debate with my friends about whether we should call the fruit ‘ananas’ like many languages do, or ‘pineapple’ like in English. To Reply to me, say §[postid]§ with your reply!"></textarea><br>
         <button id="submit-post">Post</button>
     </div>
     <div class="posts-container">
-        <!-- Posts will appear here -->
     </div>
     <div class="footer">
         <p>Thanks For Using!</p>
@@ -112,25 +112,17 @@
         function displayPosts(posts) {
             const postsContainer = document.querySelector('.posts-container');
             postsContainer.innerHTML = '';
-            posts.sort((a, b) => b.id - a.id); // Sort by recent
-
+            posts.sort((a, b) => b.id - a.id);
             posts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
                 postElement.innerHTML = `
                     <h4><strong>${post.username}</strong> <span class="post-id">§${post.id}§</span></h4>
-                    <p>${post.content}</p>
-                    <div class="replies"></div>
+                    <p>${post.content.replace(/([^]+)(https?:\/\/[^]+)/g, '<a href="$2" target="_blank">$1</a>')}</p>
+                    <p class="post-meta">Gipline v${post.version || '1.0 or Gipitizza'}</p>
+                    <p class="post-meta">${post.date ? new Date(post.date).toLocaleString() : 'This Post Was Posted Before Timestamps Were Added.'}</p>
                 `;
                 postsContainer.appendChild(postElement);
-
-                // Display replies under the post
-                const repliesContainer = postElement.querySelector('.replies');
-                posts.filter(reply => reply.content.startsWith(`§${post.id}§`))
-                     .forEach(reply => {
-                         const replyContent = reply.content.replace(`§${post.id}§`, '').trim();
-                         repliesContainer.innerHTML += `<p><strong>Reply:</strong> ${replyContent}</p>`;
-                     });
             });
         }
 
@@ -144,7 +136,7 @@
             }
 
             const posts = await fetchPosts();
-            const newPost = { id: posts.length + 1, username: username, content: content };
+            const newPost = { id: posts.length + 1, username, content, date: new Date().toISOString(), version: '1.1' };
             posts.push(newPost);
 
             await fetch(apiUrl, {
@@ -153,7 +145,7 @@
                     'Content-Type': 'application/json',
                     'X-Master-Key': apiKey
                 },
-                body: JSON.stringify({ posts: posts })
+                body: JSON.stringify({ posts })
             });
 
             document.getElementById('post-content').value = '';
@@ -167,4 +159,4 @@
         };
     </script>
 </body>
-</html>
+</html> 
