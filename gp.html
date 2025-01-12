@@ -81,24 +81,6 @@
             color: #00f;
             text-decoration: underline;
         }
-        .replies-container {
-            margin-left: 20px;
-            padding-top: 10px;
-            border-top: 1px solid #555;
-        }
-        .reply {
-            background-color: #444;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .reply.post {
-            background-color: #555;
-            margin-left: 40px;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.95em;
-        }
     </style>
 </head>
 <body>
@@ -106,9 +88,7 @@
         <img src="https://files.catbox.moe/mi2qd8.png" alt="Gipline Logo">
         <h1>Welcome to Gipline</h1>
         <p class="slogan">We are online, Gipline!</p>
-        <p>R.I.P Replies [Jan ?? 2025 - Jan 12 2025]</p>
-        <p>The Reply Feature Was lost when releasing v1.3 due to a code error. Since then, we tried our best to restoring the feature but now it's lost and unreplicable.</p>
-        <p>Replies were an important part of Gipline's life. We miss you. R.I.P!</p>
+        <p>Just want to remind you that there was a reply feature, but strangely disappeared in v1.3, me, the creator, has totally NO Idea how this happened. But anyways, R.I.P!.this wasn't purposeful. -Gioyous</p>
     </div>
     <div class="warning">
         <p>I want to warn children that they have to ask their parents or tutor to check if there's Unsafe content, before using the social media. Thanks</p>
@@ -122,16 +102,6 @@
         <textarea id="post-content" placeholder="Type your message here..."></textarea><br>
         <input type="text" id="file-link" placeholder="Optional: Upload File From DIRECT Link. For example: https://files.catbox.moe/y1mtfa.png"><br>
         <button id="submit-post">Post</button>
-    </div>
-    <div class="sort-options">
-        <label for="sort-dropdown">Sort Posts By:</label>
-        <select id="sort-dropdown">
-            <option value="most-recent-id">Most Recent (Calculated By ID)</option>
-            <option value="most-recent-date">Most Recent (Calculated By Date)</option>
-            <option value="least-recent-id">Least Recent (Calculated By ID)</option>
-            <option value="least-recent-date">Least Recent (Calculated By Date)</option>
-            <option value="most-replies">Most Replies</option>
-        </select>
     </div>
     <div class="posts-container"></div>
     <div class="footer">
@@ -150,11 +120,29 @@
         function renderFile(fileLink) {
             if (fileLink) {
                 const fileType = fileLink.split('.').pop().toLowerCase();
-                if (['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'].includes(fileType)) {
+                if (['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg', 'tiff', 'ico', 'apng', 'jfif', 'heif', 'raw', 'psd', 'ai'].includes(fileType)) {
                     return `<div class="media"><img src="${fileLink}" alt="Image"></div>`;
                 }
-                if (['mp4', 'webm', 'ogg', 'avi'].includes(fileType)) {
+                if (['mp4', 'webm', 'ogg', 'avi', 'mov', 'wmv', 'flv', 'mkv', '3gp', 'm4v', 'vob', 'mpg', 'mpeg'].includes(fileType)) {
                     return `<div class="media"><video controls src="${fileLink}"></video></div>`;
+                }
+                if (['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a', 'wma', 'alac', 'ape', 'mka'].includes(fileType)) {
+                    return `<div class="media"><audio controls src="${fileLink}"></audio></div>`;
+                }
+                if (['pdf', 'docx', 'xlsx', 'pptx', 'txt', 'odt', 'rtf', 'md', 'xml', 'csv', 'json', 'yml', 'ppt', 'doc'].includes(fileType)) {
+                    return `<div class="media"><a href="${fileLink}" target="_blank">Download File</a></div>`;
+                }
+                if (['zip', 'rar', '7z', 'tar', 'gz', 'bz2'].includes(fileType)) {
+                    return `<div class="media"><a href="${fileLink}" target="_blank">Download Archive</a></div>`;
+                }
+                if (['exe', 'bat', 'sh', 'jar', 'py'].includes(fileType)) {
+                    return `<div class="media"><a href="${fileLink}" target="_blank">Download Executable</a></div>`;
+                }
+                if (['ttf', 'otf', 'woff', 'woff2', 'eot'].includes(fileType)) {
+                    return `<div class="media"><a href="${fileLink}" target="_blank">Download Font</a></div>`;
+                }
+                if (['html', 'css', 'js', 'php', 'json', 'xsl', 'yaml'].includes(fileType)) {
+                    return `<div class="media"><a href="${fileLink}" target="_blank">View Code</a></div>`;
                 }
                 return `<div class="media"><a href="${fileLink}" target="_blank">Download File</a></div>`;
             }
@@ -164,69 +152,53 @@
         function displayPosts(posts) {
             const postsContainer = document.querySelector('.posts-container');
             postsContainer.innerHTML = '';
-            
+            posts.sort((a, b) => b.id - a.id);
             posts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
                 postElement.innerHTML = `
                     <h4><strong>${post.username}</strong> <span class="post-id">§${post.id}§</span></h4>
-                    <p>${post.content}</p>
+                    <p>${post.content.replace(/([^]+)(https?:\/\/[^]+)/g, '<a href="$2" target="_blank">$1</a>')}</p>
                     ${renderFile(post.fileLink)}
-                    <p class="post-meta">${new Date(post.date).toLocaleString()}</p>
+                    <p class="post-meta">${post.date ? new Date(post.date).toLocaleString() : 'This Post Was Posted Before Timestamps Were Added.'}</p>
+                    <p class="post-meta">To Reply, add §${post.id}§ to the start of your post</p>
                 `;
-                
-                if (post.replies && post.replies.length > 0) {
-                    const repliesContainer = document.createElement('div');
-                    repliesContainer.classList.add('replies-container');
-                    
-                    post.replies.forEach(reply => {
-                        if (reply.content.startsWith('§' + post.id + '§')) {
-                            const replyElement = document.createElement('div');
-                            replyElement.classList.add('reply', 'post');
-                            replyElement.innerHTML = `
-                                <h4><strong>${reply.username}</strong> <span class="post-id">§${reply.id}§</span></h4>
-                                <p>${reply.content.replace('§' + post.id + '§', '').trim()}</p>
-                                ${renderFile(reply.fileLink)}
-                                <p class="post-meta">${new Date(reply.date).toLocaleString()}</p>
-                            `;
-                            repliesContainer.appendChild(replyElement);
-                        }
-                    });
-                    
-                    postElement.appendChild(repliesContainer);
-                }
-                
                 postsContainer.appendChild(postElement);
             });
         }
 
-        function sortPosts(posts, criterion) {
-            switch (criterion) {
-                case 'most-recent-id':
-                    return posts.sort((a, b) => b.id - a.id);
-                case 'most-recent-date':
-                    return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-                case 'least-recent-id':
-                    return posts.sort((a, b) => a.id - b.id);
-                case 'least-recent-date':
-                    return posts.sort((a, b) => new Date(a.date) - new Date(b.date));
-                case 'most-replies':
-                    return posts.sort((a, b) => (b.replies?.length || 0) - (a.replies?.length || 0));
-                default:
-                    return posts;
-            }
-        }
+        document.getElementById('submit-post').addEventListener('click', async () => {
+            const content = document.getElementById('post-content').value;
+            const username = document.getElementById('username').value || 'Anonymous';
+            const fileLink = document.getElementById('file-link').value;
 
-        document.getElementById('sort-dropdown').addEventListener('change', async (e) => {
+            if (!content.trim()) {
+                alert("Your post must contain a message.");
+                return;
+            }
+
             const posts = await fetchPosts();
-            const sortedPosts = sortPosts(posts, e.target.value);
-            displayPosts(sortedPosts);
+            const newPost = { id: posts.length + 1, username, content, fileLink, date: new Date().toISOString() };
+            posts.push(newPost);
+
+            await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': apiKey
+                },
+                body: JSON.stringify({ posts })
+            });
+
+            document.getElementById('post-content').value = '';
+            document.getElementById('username').value = '';
+            document.getElementById('file-link').value = '';
+            displayPosts(posts);
         });
 
         window.onload = async () => {
             const posts = await fetchPosts();
-            const sortedPosts = sortPosts(posts, 'most-recent-id');
-            displayPosts(sortedPosts);
+            displayPosts(posts);
         };
     </script>
 </body>
