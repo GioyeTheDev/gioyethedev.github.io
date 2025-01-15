@@ -15,9 +15,6 @@
     <meta name="keywords" content="Gipline, social media, online platform, share posts, thoughts">
     <meta name="robots" content="index, follow">
     <link rel="icon" href="https://files.catbox.moe/mi2qd8.png" type="image/png">
-<script>
-    window.location.href = "https://gioyethedev.github.io/gpd";
-</script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,6 +58,7 @@
             margin: 10px;
             padding: 10px;
             border-radius: 5px;
+            display: none;
         }
         .post h4 {
             color: #fff;
@@ -84,6 +82,18 @@
             color: #00f;
             text-decoration: underline;
         }
+        .loading {
+            text-align: center;
+            margin: 50px 0;
+            font-size: 1.5em;
+            color: #aaa;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +116,7 @@
         <input type="text" id="file-link" placeholder="Optional: Upload File From DIRECT Link. For example: https://files.catbox.moe/y1mtfa.png"><br>
         <button id="submit-post">Post</button>
     </div>
+    <div class="loading">Loading posts...</div>
     <div class="posts-container"></div>
     <div class="footer">
         <p>Thanks For Using!</p>
@@ -155,8 +166,10 @@
         function displayPosts(posts) {
             const postsContainer = document.querySelector('.posts-container');
             postsContainer.innerHTML = '';
-            posts.sort((a, b) => b.id - a.id);
-            posts.forEach(post => {
+
+            const validPosts = posts.filter(post => !isNaN(post.id) && post.id.toString().toLowerCase() !== 'ann').sort((a, b) => b.id - a.id);
+
+            validPosts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
                 postElement.innerHTML = `
@@ -166,8 +179,11 @@
                     <p class="post-meta">${post.date ? new Date(post.date).toLocaleString() : 'This Post Was Posted Before Timestamps Were Added.'}</p>
                     <p class="post-meta">Gipline Post</p>
                 `;
+                postElement.style.display = 'block';
                 postsContainer.appendChild(postElement);
             });
+
+            document.querySelector('.loading').style.display = 'none';
         }
 
         document.getElementById('submit-post').addEventListener('click', async () => {
