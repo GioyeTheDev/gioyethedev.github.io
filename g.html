@@ -57,6 +57,11 @@
         <img src="https://files.catbox.moe/3boag6.png" alt="Gioyous Logo">
     </div>
 
+    <div style="margin-top: 20px; color: #fff;">
+        <p>Contact us at <a href="https://discord.gg/zWGYWymc3Q" style="color: #0ff;">https://discord.gg/zWGYWymc3Q</a></p>
+        <p style="font-weight: bold;">Note: <span id="nte">notevar</span></p>
+    </div>
+
     <script>
         const API_URL = "https://api.jsonbin.io/v3/b/678c02f3e41b4d34e47a429e"; // Fixed Bin ID
         const API_KEY = "$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ."; // Replace with your JSONBin API Key
@@ -64,10 +69,11 @@
 
         const videoElement = document.getElementById("tv-stream");
         const liveFeedback = document.getElementById("live-feedback");
+        const noteSpan = document.getElementById("nte"); // Targeting the 'nte' variable in the DOM
 
         let currentVideoUrl = fallbackVideo; // Tracks the currently loaded video URL
 
-        // Function to load the stream
+        // Function to load the stream and update the 'notevar' with API data
         async function loadStream() {
             try {
                 const response = await fetch(API_URL, {
@@ -78,6 +84,9 @@
                 if (!response.ok) throw new Error("Failed to fetch stream data");
                 const data = await response.json();
                 const videoUrl = data.record.video || fallbackVideo;
+                const noteVar = data.record.nte || "notevar"; // Accessing 'nte' variable from API
+
+                noteSpan.textContent = noteVar; // Update the 'notevar' span with API data
 
                 if (videoUrl !== currentVideoUrl) {
                     currentVideoUrl = videoUrl;
