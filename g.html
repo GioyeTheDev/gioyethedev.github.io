@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GioyousTV</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        video {
+            width: 100%;
+            max-width: 960px;
+            height: auto;
+            background-color: #000;
+            display: block;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            position: relative;
+        }
+        .live-feedback {
+            color: #ccc;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .logo {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .logo img {
+            width: 150px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <video id="tv-stream" controls autoplay loop preload="auto">
+        <source src="https://files.catbox.moe/zqlrta.mp4" type="video/movie">
+        Your browser does not support the video tag.
+    </video>
+    <div class="live-feedback" id="live-feedback">Streaming: https://files.catbox.moe/zqlrta.mp4</div>
+    <div class="logo">
+        <img src="https://files.catbox.moe/3boag6.png" alt="Gioyous Logo">
+    </div>
+
+    <script>
+        const API_URL = "https://api.jsonbin.io/v3/b/678c02f3e41b4d34e47a429e"; // Fixed Bin ID
+        const API_KEY = "$2a$10$o7m1fbjD.Yi8LLB8l/Xss.EyqBOEbh/2sBBItB0CVdEpbWK.rGZJ."; // Replace with your JSONBin API Key
+        const fallbackVideo = "https://files.catbox.moe/zqlrta.mp4";
+
+        const videoElement = document.getElementById("tv-stream");
+        const liveFeedback = document.getElementById("live-feedback");
+
+        let currentVideoUrl = fallbackVideo; // Tracks the currently loaded video URL
+
+        // Function to load the stream
+        async function loadStream() {
+            try {
+                const response = await fetch(API_URL, {
+                    headers: {
+                        "X-Master-Key": API_KEY,
+                    },
+                });
+                if (!response.ok) throw new Error("Failed to fetch stream data");
+                const data = await response.json();
+                const videoUrl = data.record.video || fallbackVideo;
+
+                if (videoUrl !== currentVideoUrl) {
+                    currentVideoUrl = videoUrl;
+                    videoElement.src = videoUrl;
+                    videoElement.play();
+                    liveFeedback.textContent = `Contact us at https://discord.gg/zWGYWymc3Q`;
+                }
+            } catch (error) {
+                console.error(error);
+                videoElement.src = fallbackVideo;
+                videoElement.play();
+                liveFeedback.textContent = "Streaming failed, using fallback.";
+            }
+        }
+
+        // Periodically check for updates in the API
+        setInterval(loadStream, 1000);
+
+        // Load the initial stream on page load
+        window.onload = loadStream;
+    </script>
+</body>
+</html>
