@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="GioyousTV: Your Favorite Free Television. We Broadcast What You Want, FOR FREE! We Broadcast EVERYTHING as long as it isn't considered piracy. 
+    <meta name="description" content="GioyousTV: Your Favorite Free Television. We Broadcast What You Want, FOR FREE! We Broadcast EVERYTHING as long as it isn't considered piracy.">
 
-If you sent a link to this website, In a social media, you might see below the embed the current broadcast:">
-    <meta property="og:video" content="">
     <title>GioyousTV</title>
     <style>
         body {
@@ -69,7 +67,9 @@ If you sent a link to this website, In a social media, you might see below the e
         const videoElement = document.getElementById("tv-stream");
         const liveFeedback = document.getElementById("live-feedback");
         const noteSpan = document.getElementById("nte");
-        const metaVideo = document.querySelector('meta[property="og:video"]');
+        const metaVideo = document.createElement('meta');  // Create meta tag element dynamically
+        metaVideo.setAttribute('property', 'og:video');
+        document.head.appendChild(metaVideo);  // Append meta tag to the head
 
         let currentVideoUrl = fallbackVideo;
 
@@ -93,14 +93,14 @@ If you sent a link to this website, In a social media, you might see below the e
                     videoElement.src = videoUrl;
                     videoElement.play();
                     liveFeedback.textContent = `Streaming: ${videoUrl}`;
-                    metaVideo.content = videoUrl; // Dynamically set the meta video URL
+                    metaVideo.content = videoUrl; // Dynamically set the og:video URL
                 }
             } catch (error) {
                 console.error(error);
                 videoElement.src = fallbackVideo;
                 videoElement.play();
                 liveFeedback.textContent = "Streaming failed, using fallback.";
-                metaVideo.content = fallbackVideo; // Fallback for the meta video URL
+                metaVideo.content = fallbackVideo; // Fallback for the og:video URL
             }
         }
 
