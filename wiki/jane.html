@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JāneZaGāru Wiki</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: "Arial", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #121212; /* Dark mode background */
+            color: #e0e0e0; /* Light gray text for readability */
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1e1e1e; /* Slightly lighter dark mode container */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+
+        /* Titles and Headers */
+        h1, h2 {
+            text-align: center;
+            font-size: 2.5em;
+            background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            display: inline-block;
+        }
+
+        /* Scrollable Box for Images */
+        .scrollable-box {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .scrollable-box img {
+            width: 180px;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid #333;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .scrollable-box img:hover {
+            transform: scale(1.1);
+            border-color: #ff6584; /* Accent color */
+        }
+
+        /* Sections and Content */
+        .section {
+            margin-bottom: 30px;
+        }
+        p, ul {
+            font-size: 1.2em;
+        }
+        a {
+            color: #64ffda;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Trivia Box */
+        .trivia {
+            padding: 15px;
+            background: #333; /* Dark gray background for trivia */
+            border-left: 4px solid #64ffda;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* NSFW Button and Trivia */
+        .nsfw-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+            color: #fff;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .nsfw-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.5);
+        }
+        .nsfw-trivia {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            background: #4a4a4a;
+            border-radius: 8px;
+            font-style: italic;
+            color: #ff8a80;
+        }
+    </style>
+    <script>
+        function showNSFWTrivia() {
+            if (confirm("Are you absolutely sure you want to view this trivia? It contains NSFW information.")) {
+                document.getElementById("nsfw-trivia").style.display = "block";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>JāneZaGāru Wiki</h1>
+
+        <!-- Scrollable Images -->
+        <div class="scrollable-box">
+            <img src="https://files.catbox.moe/jyswxe.png" alt="JāneZaGāru Image 1">
+            <img src="https://files.catbox.moe/8wvzd0.png" alt="JāneZaGāru Image 2">
+            <img src="https://files.catbox.moe/pnj1ty.png" alt="JāneZaGāru Image 3">
+            <img src="https://files.catbox.moe/i8fy97.png" alt="JāneZaGāru Image 4">
+            <img src="https://files.catbox.moe/rzszrb.png" alt="JāneZaGāru Image 5">
+            <img src="https://files.catbox.moe/dvdiow.gif" alt="JāneZaGāru GIF">
+        </div>
+
+        <!-- About Section -->
+        <div class="section">
+            <h2>About JāneZaGāru</h2>
+            <p><strong>JāneZaGāru</strong>, lovingly referred to as <strong>Jane</strong>, is a creative and whimsical original character (OC) designed by the talented <a href="https://youtube.com/@free_nsfw_in_bio" target="_blank">Gioyous</a>. She is an expressive character known for her uncontainable enthusiasm, cheerful spirit, and fun-loving personality. JāneZaGāru's main goal in life seems to be bringing smiles to the faces of everyone she meets, and she does so effortlessly with her endless antics and bubbly charm.</p>
+            <p>While Jane lives for moments of silliness and adventure, she is also deeply empathetic and values the importance of friendship and shared experiences. Her quirky demeanor might be unconventional, but it makes her unique and beloved by all who come to know her.</p>
+        </div>
+
+        <!-- Personality Section -->
+        <div class="section">
+            <h2>Personality</h2>
+            <p>Jane’s personality can be best described as a beautiful mix of high-energy chaos and genuine warmth. She loves to create laughter and fill her surroundings with happiness, but her humor is never mean-spirited or at someone else’s expense. She genuinely wants to bring joy into the lives of others and embraces her imperfections as part of what makes her so special.</p>
+            <p>Her mischievous side shines when she engages in playful tricks, but beneath that lies a heart full of compassion and a desire to connect with others on a meaningful level.</p>
+        </div>
+
+        <!-- Talents Section -->
+        <div class="section">
+            <h2>Talents</h2>
+            <ul>
+                <li><strong>Music and Performance:</strong> Jane is a naturally talented musician who loves to play her guitar and sing with all her heart. She doesn’t worry too much about memorizing notes perfectly, as she believes the beauty of music lies in its spontaneity. Her occasional mistakes only add to her charm, making her performances unforgettable.</li>
+                <li><strong>Unique Magic:</strong> Jane has a gift for pulling off whimsical and amusing magical tricks, such as shrinking herself down to tiny sizes or performing surreal feats that leave everyone wondering how she did it. These abilities are less about practicality and more about spreading joy and wonder.</li>
+            </ul>
+        </div>
+
+        <!-- Trivia Section -->
+        <div class="section">
+            <h2>Trivia</h2>
+            <div class="trivia">
+                <ul>
+                    <li>The name <strong>JāneZaGāru</strong> directly translates to "JaneTheGirl" in Japanese, reflecting her simple yet delightful nature.</li>
+                    <li>Her creation and first-ever appearance in any form of media were heavily inspired by the wacky and nonsensical tone of Weird Al Yankovic’s song <em>"Everything You Know Is Wrong!"</em>, which influenced her humorous outlook on life.</li>
+                    <li>Jane is not just another character for her creator; she is Gioyous’s favorite OC of all time and holds a deeply personal significance.</li>
+                    <li>Although Jane was born in Japan, she resides in a surreal white void. This isn’t because she feels lonely or isolated, but because she genuinely loves the calm and peaceful feeling the void provides. She can, however, teleport to any world she wishes when she’s craving a new adventure.</li>
+                </ul>
+            </div>
+
+            <!-- NSFW Trivia Button -->
+            <button class="nsfw-button" onclick="showNSFWTrivia()">Show NSFW Trivia</button>
+            <div id="nsfw-trivia" class="nsfw-trivia">
+                <p>Originally, JāneZaGāru was conceptualized as a Futanari character. However, this was later revised to fit her broader and more family-friendly appeal.</p>
+                <p>Interestingly, JāneZaGāru was initially envisioned as nothing more than a playful NSFW emoji, but her potential quickly evolved, and she became the vibrant, multi-dimensional character we know and love today.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
