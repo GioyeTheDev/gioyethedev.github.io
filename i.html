@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>i - Text Retrieval</title>
+    <script>
+        (function() {
+            // Text documents stored in the HTML
+            const documents = {
+                "1": "First Document of the iProject",
+                "123": "This is the content for ID 123.",
+                "456": "i like u... wat stopping u?",
+                "789": "i love you!",
+                "999": "nothing here."
+            };
+
+            // Extract the query string
+            const query = document.location.href.split('?')[1];
+            const params = new URLSearchParams(query);
+            const id = params.get("id");
+
+            // Output the corresponding text or an error message
+            document.body.innerText = documents[id] || "Error: Document not found.";
+        })();
+    </script>
+</head>
+<body>
+</body>
+</html>
