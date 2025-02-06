@@ -5,22 +5,29 @@
     <title>i - Text Retrieval</title>
     <script>
         (function() {
-            // Text documents stored in the HTML
             const documents = {
                 "1": "First Document of the iProject",
                 "123": "This is the content for ID 123.",
                 "456": "i like u... wat stopping u?",
                 "789": "i love you!",
-                "999": "nothing here."
+                "999": "nothing here.",
+                "555": "This is a new document added with ID 555.",
+                "505": "SOS",
+                "404": "Not Found",
+                "1000": "Document 1000: The end of the world.",
+                "777": "Lucky number 777!",
+                "888": "You found a secret document!",
+                "202": "This is document number 202. Keep it safe!"
             };
 
-            // Extract the query string
-            const query = document.location.href.split('?')[1];
-            const params = new URLSearchParams(query);
+            const params = new URLSearchParams(window.location.search);
             const id = params.get("id");
 
-            // Output the corresponding text or an error message
-            document.body.innerText = documents[id] || "Error: Document not found.";
+            // Retrieve the document or show an error message
+            const result = documents[id] || "Error: Document not found.";
+
+            // Output the result as plain text for cURL compatibility
+            document.body.innerText = result;
         })();
     </script>
 </head>
